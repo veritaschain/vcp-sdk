@@ -1,0 +1,44 @@
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - name: Python tests
+        working-directory: python
+        run: |
+          pip install -e ".[test,blake3]"
+          pytest -q
+      - name: Vectors are reproducible
+        run: |
+          python tools/generate_vectors.py
+          python tools/gen_mql5_selftest.py
+          git diff --exit-code test-vectors mql5
+      - name: TypeScript tests
+        working-directory: typescript
+        run: |
+          npm ci
+          npm test
+      - name: Cross-language check
+        run: tools/crosslang/run.sh
+      - name: Merkle cross-check against transparency-dev/merkle
+        run: |
+          cd tools/merkle-crosscheck-go && go run . 64 > /tmp/go-merkle.jsonl
+          cd ../.. && python tools/merkle-crosscheck-go/compare.py /tmp/go-merkle.jsonl
