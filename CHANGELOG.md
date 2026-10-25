@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+* MQL5 is now compiled and self-tested: `tools/mql5/compile-and-selftest.sh`
+  installs MetaTrader 5 under Wine, compiles the self-test and the example EA
+  with MetaEditor and runs the self-test in the terminal; the `mql5` CI workflow
+  runs it. First run (2026-10-25, build 6283, Wine 11.20): 0 errors, 0 warnings;
+  199 passed, 0 failed. No change to the MQL5 code.
+* SECURITY.md: GitHub private vulnerability reporting is enabled.
+
 ## 0.1.0 — 2026-10-25 (pre-release)
 
 First release. Targets VCP v1.2.0 (vcp-spec tag `v1.2.0`, commit `b23acb2`).

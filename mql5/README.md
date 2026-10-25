@@ -6,7 +6,17 @@ SDK's canonical form (RFC 8785, with integers as exact digits: INTERPRETATIONS.m
 I-4), computes the SHA-256 EventHash, and writes unsigned events as JSON Lines.
 It also computes RFC 6962 Merkle roots and verifies inclusion proofs.
 
-**Not compiled in this repository's CI.** Before use, compile and run
+**Compiled and self-tested under Wine, not on Windows.** `tools/mql5/compile-and-selftest.sh`
+(run by the `mql5` CI workflow) installs MetaTrader 5 from MetaQuotes into a Wine
+prefix, compiles the self-test and the example EA with MetaEditor, and runs the
+self-test as the terminal's startup script, without logging in to an account. On
+2026-10-25 (MetaTrader 5 build 6283, Wine 11.20 staging) both compiled with
+0 errors and 0 warnings and the self-test reported 199 passed, 0 failed. With
+Ubuntu 24.04's packaged Wine 9.0 the terminal and MetaEditor stopped at "A
+debugger has been found running in your system" in our environment; use
+WineHQ's builds. The example EA has been compiled, not run against a broker.
+
+Before use, compile and run
 `Scripts/VeritasChain/VCP_SelfTest.mq5` (generated from `test-vectors/vectors.json`
 by `tools/gen_mql5_selftest.py`). It checks canonical output for the vector
 objects (including large integers), EventHashes, Merkle roots for 1–24 leaves,
@@ -14,7 +24,8 @@ inclusion proofs, and the writer: line format, resume after reopening (also when
 the Payload contains `EventHash` keys), refusal of another chain and of an
 incomplete last line, and continuing a chain in a new file. It prints
 `N passed, 0 failed` to the Experts log when all of them match the
-Python/TypeScript results. It does not cover every error path.
+Python/TypeScript results. It does not cover every error path. Run it in
+your own terminal: builds and platforms other than the one above are untested.
 
 ## Why signing happens outside the terminal
 
