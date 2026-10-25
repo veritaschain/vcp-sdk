@@ -1,0 +1,29 @@
+name: mql5
+# Compiles the MQL5 sources with MetaEditor under Wine and runs the self-test in
+# the MetaTrader 5 terminal (tools/mql5/compile-and-selftest.sh). The installer is
+# downloaded from MetaQuotes on each run; no account is logged in.
+on:
+  push:
+    paths: ["mql5/**", "tools/mql5/**", ".github/workflows/mql5.yml"]
+  pull_request:
+    paths: ["mql5/**", "tools/mql5/**", ".github/workflows/mql5.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compile-and-selftest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Wine (WineHQ staging), Xvfb and osslsigncode
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -qO /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          sudo wget -qNP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --install-recommends winehq-staging xvfb osslsigncode
+          wine --version
+      - name: Compile with MetaEditor and run the self-test
+        run: tools/mql5/compile-and-selftest.sh
