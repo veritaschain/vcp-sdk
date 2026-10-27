@@ -1,27 +1,31 @@
 {
-  "status": "non-normative case inventory; no expected verifier outcomes asserted",
+  "status": "non-normative test fixtures; expected canonical bytes and Merkle roots, not normative VCP decisions",
   "version": "2026-10-27",
   "spec": "VCP v1.2.0",
   "cases": [
     {
       "id": "integer-2pow53-minus1",
       "kind": "canonical-json",
-      "input": "{\"n\":9007199254740991}"
+      "input": "{\"n\":9007199254740991}",
+      "expectedCanonical": "{\"n\":9007199254740991}"
     },
     {
       "id": "integer-2pow53-plus1",
       "kind": "canonical-json",
-      "input": "{\"n\":9007199254740993}"
+      "input": "{\"n\":9007199254740993}",
+      "expectedCanonical": "{\"n\":9007199254740993}"
     },
     {
       "id": "integer-negative-2pow53-plus1",
       "kind": "canonical-json",
-      "input": "{\"n\":-9007199254740993}"
+      "input": "{\"n\":-9007199254740993}",
+      "expectedCanonical": "{\"n\":-9007199254740993}"
     },
     {
       "id": "integer-2pow60",
       "kind": "canonical-json",
-      "input": "{\"TimestampInt\":1152921504606846976}"
+      "input": "{\"TimestampInt\":1152921504606846976}",
+      "expectedCanonical": "{\"TimestampInt\":1152921504606846976}"
     },
     {
       "id": "merkle-3-leaves",
@@ -30,7 +34,8 @@
         "0000000000000000000000000000000000000000000000000000000000000000",
         "0101010101010101010101010101010101010101010101010101010101010101",
         "0202020202020202020202020202020202020202020202020202020202020202"
-      ]
+      ],
+      "expectedRootHex": "ba8d94b7fbcecae7b81c4c80574fe24734a6917bf9c1ecd66ff3e0c34ead4620"
     },
     {
       "id": "merkle-4-leaves",
@@ -40,7 +45,8 @@
         "0101010101010101010101010101010101010101010101010101010101010101",
         "0202020202020202020202020202020202020202020202020202020202020202",
         "0202020202020202020202020202020202020202020202020202020202020202"
-      ]
+      ],
+      "expectedRootHex": "9aa08d413285ecda667944ba9446d77c1f1712ecf946bfcf74453c731a38e7b7"
     },
     {
       "id": "anchor-unsigned-metadata",
