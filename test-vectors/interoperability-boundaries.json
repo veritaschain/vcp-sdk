@@ -1,0 +1,56 @@
+{
+  "status": "non-normative case inventory; no expected verifier outcomes asserted",
+  "version": "2026-10-27",
+  "spec": "VCP v1.2.0",
+  "cases": [
+    {
+      "id": "integer-2pow53-minus1",
+      "kind": "canonical-json",
+      "input": "{\"n\":9007199254740991}"
+    },
+    {
+      "id": "integer-2pow53-plus1",
+      "kind": "canonical-json",
+      "input": "{\"n\":9007199254740993}"
+    },
+    {
+      "id": "integer-negative-2pow53-plus1",
+      "kind": "canonical-json",
+      "input": "{\"n\":-9007199254740993}"
+    },
+    {
+      "id": "integer-2pow60",
+      "kind": "canonical-json",
+      "input": "{\"TimestampInt\":1152921504606846976}"
+    },
+    {
+      "id": "merkle-3-leaves",
+      "kind": "merkle-root",
+      "leafHex": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0101010101010101010101010101010101010101010101010101010101010101",
+        "0202020202020202020202020202020202020202020202020202020202020202"
+      ]
+    },
+    {
+      "id": "merkle-4-leaves",
+      "kind": "merkle-root",
+      "leafHex": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0101010101010101010101010101010101010101010101010101010101010101",
+        "0202020202020202020202020202020202020202020202020202020202020202",
+        "0202020202020202020202020202020202020202020202020202020202020202"
+      ]
+    },
+    {
+      "id": "anchor-unsigned-metadata",
+      "kind": "security-negative",
+      "mutation": "Change EventCount or PolicyID while retaining MerkleRoot and root-only signature; do not treat root signature as metadata authentication"
+    },
+    {
+      "id": "anchor-evidence-absent",
+      "kind": "security-indeterminate",
+      "mutation": "No external anchor verifier or evidence supplied"
+    }
+  ]
+}
