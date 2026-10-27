@@ -84,6 +84,11 @@ at format only says so in its name (`anchor_timestamp_format`).
   only, so `EventCount`, `FirstEventID`, `LastEventID` and `PolicyID` are checked
   against the supplied events, not against a signature. See I-6.
 
+The [interoperability workplan and shared boundary fixtures](docs/INTEROPERABILITY_WORKPLAN.md)
+exercise these choices in Python and TypeScript, including exact signature bytes,
+unsigned anchor metadata, and unavailable external proof. They are first-party,
+non-normative research fixtures; specification adoption and independent reproduction remain open.
+
 ## Install
 
 Python 3.10+:
