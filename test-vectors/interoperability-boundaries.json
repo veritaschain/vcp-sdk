@@ -1,7 +1,91 @@
 {
-  "status": "non-normative test fixtures; expected canonical bytes and Merkle roots, not normative VCP decisions",
+  "status": "non-normative first-party research fixtures for existing SDK interpretations; not adopted VCP decisions or independent validation",
   "version": "2026-10-27",
   "spec": "VCP v1.2.0",
+  "provenance": {
+    "canonicalBytes": "Handwritten expected strings. The anchor fixture uses only small, exactly representable integers.",
+    "hashes": "Python hashlib SHA-256 over the stated bytes, without importing the SDK. A single-leaf root is SHA-256(0x00 || raw EventHash).",
+    "signatures": "Ed25519 signatures computed with cryptography 50.0.2 over the stated bytes, without importing the SDK. This is a first-party calculation, not independent implementation reproduction.",
+    "reports": "Handwritten expectations for existing SDK checks; no external anchor verifier is supplied. Status values and reason codes are SDK-local, not adopted normative identifiers."
+  },
+  "testKey": {
+    "purpose": "Public RFC 8032 test seed, for tests only; not an operational signing key.",
+    "seedHex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+    "publicKeyHex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+  },
+  "anchorFixture": {
+    "expectedHeaderCanonical": "{\"ActorID\":\"fixture-actor\",\"ChainID\":\"fixture-chain\",\"EventID\":\"00000000-0000-7000-8000-000000000001\",\"EventType\":\"INIT\",\"PolicyID\":\"org.example:fixture\",\"SequenceNum\":0,\"TimestampISO\":\"1970-01-01T00:00:00.000Z\",\"TimestampInt\":0}",
+    "expectedPayloadCanonical": "{\"VCP-GOV\":{\"AlgoID\":\"fixture\"}}",
+    "expectedEventHashHex": "e7140353ce326146ae3d91bd8039148a7857e2c33f3652f502c41f4511c98032",
+    "expectedRootHex": "62bde74f94083de1a8126ff590d6768b190a67a1b4ea36139c4e83e6d7ba2aee",
+    "event": {
+      "Header": {
+        "ActorID": "fixture-actor",
+        "ChainID": "fixture-chain",
+        "EventID": "00000000-0000-7000-8000-000000000001",
+        "EventType": "INIT",
+        "PolicyID": "org.example:fixture",
+        "SequenceNum": 0,
+        "TimestampISO": "1970-01-01T00:00:00.000Z",
+        "TimestampInt": 0
+      },
+      "Payload": {
+        "VCP-GOV": {
+          "AlgoID": "fixture"
+        }
+      },
+      "Security": {
+        "Version": "1.1",
+        "EventHash": "sha256:e7140353ce326146ae3d91bd8039148a7857e2c33f3652f502c41f4511c98032",
+        "HashAlgo": "SHA256",
+        "Signature": "+i+APaIN8VzUFuVw4NEWg1SOjQsbJrUFnCu/Q0s8+pm1BqEyHvSRoN5+8JixNXVtkBh2qMx84VO0PHLfxDy1Dg==",
+        "SignAlgo": "ED25519",
+        "MerkleRoot": "62bde74f94083de1a8126ff590d6768b190a67a1b4ea36139c4e83e6d7ba2aee",
+        "MerkleIndex": 0,
+        "AnchorReference": "62bde74f94083de1a8126ff590d6768b190a67a1b4ea36139c4e83e6d7ba2aee"
+      }
+    },
+    "record": {
+      "MerkleRoot": "62bde74f94083de1a8126ff590d6768b190a67a1b4ea36139c4e83e6d7ba2aee",
+      "Signature": "nLm4QjpXbMypHvOaErRMxGcN+LJ+Goqlc00BW2vTzEVLVYu/0BUk7te29gZDUR2JewIFsJpLEpnP2sQJFXn1Dw==",
+      "SignAlgo": "ED25519",
+      "Timestamp": 0,
+      "EventCount": 1,
+      "FirstEventID": "00000000-0000-7000-8000-000000000001",
+      "LastEventID": "00000000-0000-7000-8000-000000000001",
+      "PolicyID": "org.example:fixture"
+    },
+    "expectedChecks": {
+      "structure": {
+        "status": "VALID"
+      },
+      "timestamp": {
+        "status": "VALID"
+      },
+      "event_hash": {
+        "status": "VALID"
+      },
+      "signature": {
+        "status": "VALID"
+      },
+      "merkle_root": {
+        "status": "VALID"
+      },
+      "root_signature": {
+        "status": "VALID"
+      },
+      "anchor_binding": {
+        "status": "VALID"
+      },
+      "anchor_timestamp_format": {
+        "status": "VALID"
+      },
+      "external_anchor": {
+        "status": "INDETERMINATE",
+        "reason": "MISSING_ANCHOR_PROOF"
+      }
+    }
+  },
   "cases": [
     {
       "id": "integer-2pow53-minus1",
@@ -49,14 +133,91 @@
       "expectedRootHex": "9aa08d413285ecda667944ba9446d77c1f1712ecf946bfcf74453c731a38e7b7"
     },
     {
-      "id": "anchor-unsigned-metadata",
-      "kind": "security-negative",
-      "mutation": "Change EventCount or PolicyID while retaining MerkleRoot and root-only signature; do not treat root signature as metadata authentication"
+      "id": "event-ascii-vs-root-raw-signature",
+      "kind": "signature-bytes",
+      "digestHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "expectedEventSignedBytesHex": "30303031303230333034303530363037303830393061306230633064306530663130313131323133313431353136313731383139316131623163316431653166",
+      "expectedRootSignedBytesHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "expectedEventSignatureBase64": "74RLxjhg5GIUX7xbIU3RLiELANPUU3lmvefOMgMyf9jbLo1hQ9SLG5jBFIJdtsPjkT+oVjhpVl5TWxW59JmSAA==",
+      "expectedRootSignatureBase64": "AMHbmIuxL9c1GmBUrj+skPq35PxWsWUccYH19V+Jb2Y5M9OpBgXZBY6dCsRZUO4tPJybFIV0FVhxef4MysNfCQ==",
+      "expectedEventVerification": true,
+      "expectedRootVerification": true,
+      "expectedCrossVerification": false
     },
     {
       "id": "anchor-evidence-absent",
-      "kind": "security-indeterminate",
-      "mutation": "No external anchor verifier or evidence supplied"
+      "kind": "anchor-record",
+      "description": "The baseline root and event signatures pass, but no AnchorTarget or external proof is supplied.",
+      "anchorPatch": {},
+      "expectedStatus": "INDETERMINATE"
+    },
+    {
+      "id": "anchor-unsigned-metadata-count",
+      "kind": "anchor-record",
+      "description": "Changing EventCount leaves the root signature valid; comparison with the supplied event rejects the metadata.",
+      "anchorPatch": {
+        "EventCount": 2
+      },
+      "expectedStatus": "INVALID",
+      "expectedCheckOverrides": {
+        "anchor_binding": {
+          "status": "INVALID",
+          "reason": "BINDING_MISMATCH"
+        }
+      }
+    },
+    {
+      "id": "anchor-unsigned-metadata-policy",
+      "kind": "anchor-record",
+      "description": "Changing PolicyID leaves the root signature valid; comparison with the supplied event rejects the metadata.",
+      "anchorPatch": {
+        "PolicyID": "org.example:other"
+      },
+      "expectedStatus": "INVALID",
+      "expectedCheckOverrides": {
+        "anchor_binding": {
+          "status": "INVALID",
+          "reason": "BINDING_MISMATCH"
+        }
+      }
+    },
+    {
+      "id": "anchor-unsigned-timestamp",
+      "kind": "anchor-record",
+      "description": "Changing Timestamp to another non-negative integer still passes its format-only check; neither the root signature nor this check authenticates its value.",
+      "anchorPatch": {
+        "Timestamp": 1
+      },
+      "expectedStatus": "INDETERMINATE"
+    },
+    {
+      "id": "anchor-proof-absent",
+      "kind": "anchor-record",
+      "description": "A recognized target type without Proof remains indeterminate.",
+      "anchorPatch": {
+        "AnchorTarget": {
+          "Type": "TSA"
+        }
+      },
+      "expectedStatus": "INDETERMINATE"
+    },
+    {
+      "id": "anchor-proof-unverified",
+      "kind": "anchor-record",
+      "description": "Synthetic nonempty Proof text is not external evidence verification; no verifier is supplied.",
+      "anchorPatch": {
+        "AnchorTarget": {
+          "Type": "TSA",
+          "Proof": "synthetic-unverified-fixture-text"
+        }
+      },
+      "expectedStatus": "INDETERMINATE",
+      "expectedCheckOverrides": {
+        "external_anchor": {
+          "status": "INDETERMINATE",
+          "reason": "EXTERNAL_ANCHOR_NOT_VERIFIED"
+        }
+      }
     }
   ]
 }
