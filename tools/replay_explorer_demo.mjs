@@ -63,6 +63,12 @@ function replay(c, policy) {
   if (!Array.isArray(events) || events.length < 1 || events.length > 100 || !object(record))
     throw Error('Malformed or oversized fixed event batch');
   const checks = [];
+  // An extra or duplicate detached proof must not be silently ignored.
+  const proofIds = c.inclusion_proofs.map(p => p?.event_id);
+  if (c.inclusion_proofs.length !== events.length || new Set(proofIds).size !== proofIds.length) {
+    checks.push({ name: 'proof_binding', status: 'INVALID',
+      reason: 'PROOF_SET_MISMATCH', group: 'inclusion', scope: 'local' });
+  }
   function append(group, report) {
     for (const x of report.checks) checks.push({
       ...x, group,
