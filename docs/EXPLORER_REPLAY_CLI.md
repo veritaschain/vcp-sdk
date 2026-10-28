@@ -79,12 +79,22 @@ node tools/replay_explorer_demo.mjs --api-url \
 ~~~
 
 The HTTP probe openly identifies itself as VCP-Evidence-Replay/0.1 with a
-non-browser User-Agent, as recommended for legitimate clients by Cloudflare's
-Error 1010 guidance. This does not guarantee that the host will grant access.
+non-browser User-Agent. This is this project's transparent client-identification
+choice, not a guaranteed fix or a recommendation established by the cited
+Cloudflare Error 1010 page. That page describes blocking based on browser
+signature and identifies the site owner as the policy controller:
+https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/
+
 A host-level 403, including Cloudflare error 1010, is reported as a transport
 problem and does not change the result of the offline replay. Do not disguise
 client identity to defeat access controls. Use the checked-out fixture, a
 saved browser response or a deliberately supported alternate deployment.
+
+For bounded Python/curl/Node reachability checks, comparison to the original
+fixture bytes, and captured responses replayed by the local SDK, see the
+[public probe guide](PUBLIC_EVIDENCE_PROBE.md). The ordinary replay compares
+verdicts; the public probe additionally checks fixture equality. Matching
+verdicts alone do not prove that the supplied evidence is the original fixture.
 
 ## Trust and evidence boundaries
 
