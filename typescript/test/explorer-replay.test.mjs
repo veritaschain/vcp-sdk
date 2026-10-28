@@ -84,3 +84,21 @@ test('help and malformed inputs are explicit', () => {
   assert.equal(unknown.status, 2);
   assert.match(unknown.stderr, /Unrecognized demo case/);
 });
+
+test('duplicate detached proof cannot be ignored by local replay', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'vcp-demo-duplicate-proof-'));
+  try {
+    const edited = structuredClone(bundle);
+    const c = edited.cases.find(x => x.id === 'intact');
+    c.inclusion_proofs.push(structuredClone(c.inclusion_proofs[0]));
+    const file = join(dir, 'bundle.json');
+    writeFileSync(file, JSON.stringify(edited));
+    const r = run('--bundle', file, '--case', 'intact');
+    assert.equal(r.status, 1, r.stderr);
+    const report = JSON.parse(r.stdout).results[0];
+    assert.equal(report.matches_fixed_demo, false);
+    assert.ok(report.checks.some(x => x.reason === 'PROOF_SET_MISMATCH' && x.status === 'INVALID'));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
