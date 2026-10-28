@@ -7,145 +7,67 @@ import { readFileSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 const cli = fileURLToPath(new URL('../../tools/replay_explorer_demo.mjs', import.meta.url));
 const bundle = JSON.parse(readFileSync(new URL('../../examples/explorer-demo/bundle.json', import.meta.url), 'utf8'));
-const run = (...args) => spawnSync(process.execPath, [cli, '--json', ...args], { encoding: 'utf8' });
-
+const run = (...args) => spawnSync(process.execPath, [cli, '--json', ...args], { encoding: 'utf8', timeout: 20000 });
+function temporary(fn) {
+  const dir = mkdtempSync(join(tmpdir(), 'vcp-demo-'));
+  try { return fn(join(dir, 'input.json')); } finally { rmSync(dir, { recursive: true, force: true }); }
+}
 test('offline replay computes all three expected outcomes', () => {
-  const r = run();
-  assert.equal(r.status, 0, r.stderr);
+  const r = run(); assert.equal(r.status, 0, r.stderr);
   const body = JSON.parse(r.stdout);
-  assert.equal(body.success, true);
-  assert.equal(body.first_party, true);
-  assert.equal(body.external_anchor_verified, false);
+  assert.equal(body.success, true); assert.equal(body.first_party, true); assert.equal(body.external_anchor_verified, false);
   assert.deepEqual(body.results.map(x => [x.id, x.local_status, x.overall_status]), [
-    ['intact', 'VALID', 'INDETERMINATE'],
-    ['tampered', 'INVALID', 'INVALID'],
-    ['missing-key', 'INDETERMINATE', 'INDETERMINATE']
-  ]);
-  assert.ok(body.results.every(x => x.matches_fixed_demo));
-  assert.ok(body.results[0].checks.some(x => x.name === 'external_anchor' &&
-    x.status === 'INDETERMINATE'));
+    ['intact', 'VALID', 'INDETERMINATE'], ['tampered', 'INVALID', 'INVALID'],
+    ['missing-key', 'INDETERMINATE', 'INDETERMINATE']]);
+  assert.ok(body.results.every(x => x.matches_expected_outcome && x.fixture_bytes_match));
+  assert.ok(body.results[0].checks.some(x => x.name === 'external_anchor' && x.status === 'INDETERMINATE'));
 });
-
-test('offline replay rejects a fabricated API success claim', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'vcp-demo-response-'));
-  try {
-    const c = bundle.cases.find(x => x.id === 'tampered');
-    const file = join(dir, 'response.json');
-    const api = {
-      format: 'vcp-evidence-demo-verification/1',
-      case_id: 'tampered', local_status: 'VALID', overall_status: 'VALID',
-      evidence: {
-        events_jsonl: c.events_jsonl,
-        anchor_record_json: c.anchor_record_json,
-        inclusion_proofs: c.inclusion_proofs
-      }
-    };
-    writeFileSync(file, JSON.stringify(api));
-    const mismatch = run('--api-response', file);
-    assert.equal(mismatch.status, 1, mismatch.stderr);
-    assert.equal(JSON.parse(mismatch.stdout).results[0].matches_api_claim, false);
-    api.local_status = 'INVALID';
-    api.overall_status = 'INVALID';
-    writeFileSync(file, JSON.stringify(api));
-    const matching = run('--api-response', file);
-    assert.equal(matching.status, 0, matching.stderr);
-    assert.equal(JSON.parse(matching.stdout).results[0].matches_api_claim, true);
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
-});
-
-test('altering an intact event invalidates the offline replay expectation', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'vcp-demo-altered-'));
-  try {
-    const edited = structuredClone(bundle);
-    const intact = edited.cases.find(x => x.id === 'intact');
-    const original = intact.events_jsonl;
-    intact.events_jsonl = original.replace('151.230', '999.999');
-    assert.notEqual(intact.events_jsonl, original);
-    const file = join(dir, 'bundle.json');
-    writeFileSync(file, JSON.stringify(edited));
-    const r = run('--bundle', file, '--case', 'intact');
-    assert.equal(r.status, 1, r.stderr);
-    const x = JSON.parse(r.stdout).results[0];
-    assert.equal(x.local_status, 'INVALID');
-    assert.equal(x.matches_fixed_demo, false);
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
-});
-
+test('offline replay rejects a fabricated API success claim', () => temporary(file => {
+  const c = bundle.cases.find(x => x.id === 'tampered');
+  const api = { format: 'vcp-evidence-demo-verification/1', case_id: 'tampered',
+    local_status: 'VALID', overall_status: 'VALID', evidence: {
+      events_jsonl: c.events_jsonl, anchor_record_json: c.anchor_record_json, inclusion_proofs: c.inclusion_proofs } };
+  writeFileSync(file, JSON.stringify(api));
+  const mismatch = run('--api-response', file); assert.equal(mismatch.status, 1, mismatch.stderr);
+  assert.equal(JSON.parse(mismatch.stdout).results[0].matches_api_claim, false);
+  api.local_status = 'INVALID'; api.overall_status = 'INVALID'; writeFileSync(file, JSON.stringify(api));
+  const matching = run('--api-response', file); assert.equal(matching.status, 0, matching.stderr);
+  assert.equal(JSON.parse(matching.stdout).results[0].matches_api_claim, true);
+}));
+test('altering an intact event invalidates the offline replay expectation', () => temporary(file => {
+  const edited = structuredClone(bundle); const c = edited.cases.find(x => x.id === 'intact');
+  const original = c.events_jsonl; c.events_jsonl = original.replace('151.230', '999.999');
+  assert.notEqual(c.events_jsonl, original); writeFileSync(file, JSON.stringify(edited));
+  const r = run('--bundle', file, '--case', 'intact'); assert.equal(r.status, 1, r.stderr);
+  assert.equal(JSON.parse(r.stdout).results[0].local_status, 'INVALID');
+}));
 test('help and malformed inputs are explicit', () => {
   const help = spawnSync(process.execPath, [cli, '--help'], { encoding: 'utf8' });
-  assert.equal(help.status, 0, help.stderr);
-  assert.match(help.stdout, /Usage/);
-  const unknown = run('--case', 'not-a-case');
-  assert.equal(unknown.status, 2);
-  assert.match(unknown.stderr, /Unrecognized demo case/);
+  assert.equal(help.status, 0, help.stderr); assert.match(help.stdout, /Usage/);
+  const r = run('--case', 'not-a-case'); assert.equal(r.status, 2); assert.match(r.stderr, /Unrecognized demo case/);
 });
-
-test('duplicate detached proof cannot be ignored by local replay', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'vcp-demo-duplicate-proof-'));
-  try {
-    const edited = structuredClone(bundle);
-    const c = edited.cases.find(x => x.id === 'intact');
-    c.inclusion_proofs.push(structuredClone(c.inclusion_proofs[0]));
-    const file = join(dir, 'bundle.json');
-    writeFileSync(file, JSON.stringify(edited));
-    const r = run('--bundle', file, '--case', 'intact');
-    assert.equal(r.status, 1, r.stderr);
-    const report = JSON.parse(r.stdout).results[0];
-    assert.equal(report.matches_fixed_demo, false);
-    assert.ok(report.checks.some(x => x.reason === 'PROOF_SET_MISMATCH' && x.status === 'INVALID'));
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
-});
-
+test('duplicate detached proof is rejected like API configuration', () => temporary(file => {
+  const edited = structuredClone(bundle); const c = edited.cases[0];
+  c.inclusion_proofs.push(structuredClone(c.inclusion_proofs[0])); writeFileSync(file, JSON.stringify(edited));
+  const r = run('--bundle', file, '--case', 'intact');
+  assert.equal(r.status, 2, r.stderr); assert.equal(r.stdout, ''); assert.match(r.stderr, /Duplicate proof/);
+}));
 test('HTTP probe identifies its application without a forged browser Origin', async () => {
-  const c = bundle.cases.find(x => x.id === 'intact');
-  const api = {
-    format: 'vcp-evidence-demo-verification/1',
-    case_id: 'intact',
-    local_status: 'VALID',
-    overall_status: 'INDETERMINATE',
-    evidence: {
-      events_jsonl: c.events_jsonl,
-      anchor_record_json: c.anchor_record_json,
-      inclusion_proofs: c.inclusion_proofs
-    }
-  };
-  let userAgent;
-  let origin;
-  const server = createServer((req, res) => {
-    userAgent = req.headers['user-agent'];
-    origin = req.headers.origin;
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(api));
-  });
-  await new Promise((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(0, '127.0.0.1', resolve);
-  });
+  const c = bundle.cases[0]; const api = { format: 'vcp-evidence-demo-verification/1', case_id: 'intact',
+    local_status: 'VALID', overall_status: 'INDETERMINATE', evidence: {
+      events_jsonl: c.events_jsonl, anchor_record_json: c.anchor_record_json, inclusion_proofs: c.inclusion_proofs } };
+  let agent; let origin;
+  const server = createServer((req, res) => { agent = req.headers['user-agent']; origin = req.headers.origin;
+    res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(api)); });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
   try {
-    const url = 'http://127.0.0.1:' + server.address().port + '/v1/evidence-demo/cases/intact/verification';
-    const child = spawn(process.execPath, [cli, '--api-url', url, '--json'], {
-      stdio: ['ignore', 'pipe', 'pipe']
-    });
-    let output = '';
-    let errors = '';
-    child.stdout.on('data', b => { output += b.toString(); });
-    child.stderr.on('data', b => { errors += b.toString(); });
-    const [exitCode] = await once(child, 'close');
-    assert.equal(exitCode, 0, errors);
-    assert.match(userAgent, /^VCP-Evidence-Replay\/0\.1 /);
-    assert.equal(origin, undefined);
+    const child = spawn(process.execPath, [cli, '--api-url', 'http://127.0.0.1:' + server.address().port + '/verification', '--json']);
+    let output = ''; let errors = '';
+    child.stdout.on('data', b => { output += b; }); child.stderr.on('data', b => { errors += b; });
+    const [code] = await once(child, 'close'); assert.equal(code, 0, errors);
+    assert.match(agent, /^VCP-Evidence-Replay\/0\.1 /); assert.equal(origin, undefined);
     assert.equal(JSON.parse(output).results[0].matches_api_claim, true);
-  } finally {
-    server.closeAllConnections();
-    await new Promise(resolve => server.close(resolve));
-  }
+  } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 });

@@ -1,0 +1,48 @@
+name: Evidence adapter parity
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  parity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: sdk
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: veritaschain/vcp-explorer-api
+          ref: c3d67ab2467a55e017f652b38a2b89c3f4a7cee7
+          path: api
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Build SDK and compare actual portable API checks
+        working-directory: sdk
+        env:
+          VCP_EVIDENCE_API_CORE: ${{ github.workspace }}/api/src/evidence/core.ts
+        run: |
+          npm --prefix typescript ci --ignore-scripts --no-audit
+          npm --prefix typescript run build
+          node --test typescript/test/evidence-adapter-parity.integration.mjs
+      - name: Prepare pinned source and reproduction receipt
+        working-directory: sdk
+        run: |
+          mkdir -p reproduction
+          git archive --format=zip --prefix=vcp-sdk/ HEAD > reproduction/sdk-source.zip
+          git rev-parse HEAD > reproduction/SOURCE_COMMIT.txt
+          printf '%s\n' 'API c3d67ab2467a55e017f652b38a2b89c3f4a7cee7' > reproduction/API_COMMIT.txt
+          sha256sum reproduction/sdk-source.zip > reproduction/SHA256SUMS.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: replay-source-${{ github.sha }}
+          path: sdk/reproduction/
+          retention-days: 30
+          if-no-files-found: error

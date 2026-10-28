@@ -8,6 +8,10 @@ on:
       - 'tools/probe_public_evidence.py'
       - 'tools/test_public_evidence_probe.py'
       - 'tools/replay_explorer_demo.mjs'
+      - 'typescript/src/**'
+      - 'typescript/test/**'
+      - 'typescript/package*.json'
+      - 'examples/explorer-demo/**'
       - '.github/workflows/public-evidence-probe.yml'
   push:
     branches: [main]
@@ -15,6 +19,10 @@ on:
       - 'tools/probe_public_evidence.py'
       - 'tools/test_public_evidence_probe.py'
       - 'tools/replay_explorer_demo.mjs'
+      - 'typescript/src/**'
+      - 'typescript/test/**'
+      - 'typescript/package*.json'
+      - 'examples/explorer-demo/**'
       - '.github/workflows/public-evidence-probe.yml'
 
 permissions:
@@ -22,7 +30,6 @@ permissions:
 
 jobs:
   probe:
-    # Read-only requests to a fixed public synthetic demo. No secrets or writes.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     strategy:
       fail-fast: false
@@ -51,7 +58,7 @@ jobs:
         run: |
           npm --prefix typescript ci --ignore-scripts --no-audit
           npm --prefix typescript run build
-          node --test typescript/test/explorer-replay.test.mjs
+          node --test typescript/test/explorer-replay*.test.mjs
       - name: Probe fixed public endpoints and recompute downloaded evidence
         run: python3 tools/probe_public_evidence.py --output public-evidence-probe
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
