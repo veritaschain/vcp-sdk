@@ -144,7 +144,9 @@ async function main() {
       throw Error('API URL must use HTTPS or local loopback HTTP');
     }
     const response = await fetch(url, {
-      headers: { Accept: 'application/json' },
+      // Identify our client openly; never impersonate a web browser to evade controls.
+      headers: { Accept: 'application/json',
+        'User-Agent': 'VCP-Evidence-Replay/0.1 (+https://github.com/veritaschain/vcp-sdk)' },
       redirect: 'error', signal: AbortSignal.timeout(15000)
     });
     if (!response.ok) {
