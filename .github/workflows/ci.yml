@@ -30,7 +30,8 @@ jobs:
         run: |
           python tools/generate_vectors.py
           python tools/gen_mql5_selftest.py
-          git diff --exit-code test-vectors mql5
+          python tools/generate_explorer_demo.py
+          git diff --exit-code test-vectors mql5 examples/explorer-demo/bundle.json examples/explorer-demo/trust.json
       - name: TypeScript tests
         working-directory: typescript
         run: |

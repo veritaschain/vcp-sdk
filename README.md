@@ -89,6 +89,12 @@ exercise these choices in Python and TypeScript, including exact signature bytes
 unsigned anchor metadata, and unavailable external proof. They are first-party,
 non-normative research fixtures; specification adoption and independent reproduction remain open.
 
+The [Explorer evidence demo](examples/explorer-demo/README.md) supplies a deterministic
+Python-produced batch for the optional Explorer API and GUI integration. It includes
+intact, tampered and missing-key cases, preserves raw nanosecond JSON, and keeps demo
+trust configuration separate. The intact case passes the covered local checks;
+the full batch remains INDETERMINATE because no external anchor proof is supplied.
+
 ## Install
 
 Python 3.10+:

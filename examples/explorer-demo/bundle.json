@@ -1,0 +1,137 @@
+{
+  "cases": [
+    {
+      "anchor_record_json": "{\"EventCount\":3,\"FirstEventID\":\"01a17fce-787b-7101-8101-010101010101\",\"LastEventID\":\"01a17fce-787d-7303-8303-030303030303\",\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SignAlgo\":\"ED25519\",\"Signature\":\"J7tAgIe61IEk7SAqjpLyGCc+pTaDR92MgKO1nPMfKxJVdrDkkfnQSqp53x/PJKG8aiMRIIRmTckCs5+vJp6QAw==\",\"Timestamp\":1793145610123456789}\n",
+      "description": "The supplied events, signatures, chain and Merkle proofs match under the separate demo trust configuration. External anchoring remains unverified.",
+      "events_jsonl": "{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787b-7101-8101-010101010101\",\"EventType\":\"INIT\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":0,\"TimestampISO\":\"2026-10-28T00:00:00.123456789Z\",\"TimestampInt\":1793145600123456789},\"Payload\":{\"VCP-GOV\":{\"AlgoID\":\"synthetic-demo\",\"AlgoVersion\":\"1.0.0\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":0,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"SignAlgo\":\"ED25519\",\"Signature\":\"OnrjBMRpHoES62CkPAjN/mTIpoikpUFBK+ezGtFsm67V0ZDp2BdeOzobzZOOn269AWKT5x6gDqdcpcJqI7GTCg==\",\"Version\":\"1.1\"}}\n{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787c-7202-8202-020202020202\",\"EventType\":\"SIG\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":1,\"TimestampISO\":\"2026-10-28T00:00:00.124456912Z\",\"TimestampInt\":1793145600124456912},\"Payload\":{\"VCP-TRADE\":{\"Price\":\"151.234\",\"Quantity\":\"100000\",\"Side\":\"BUY\",\"Symbol\":\"USDJPY\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":1,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PrevHash\":\"sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2\",\"SignAlgo\":\"ED25519\",\"Signature\":\"+qZUt6+f5AGZj85VI8SYV4MVLCfce36o2s3lKKhkvEI4c13FnddScSKle7vlkuLAmsEm52MeokOlLagZhZFmAg==\",\"Version\":\"1.1\"}}\n{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787d-7303-8303-030303030303\",\"EventType\":\"ORD\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":2,\"TimestampISO\":\"2026-10-28T00:00:00.125457035Z\",\"TimestampInt\":1793145600125457035},\"Payload\":{\"VCP-TRADE\":{\"OrderType\":\"LIMIT\",\"Price\":\"151.230\",\"Quantity\":\"100000\",\"Side\":\"BUY\",\"Symbol\":\"USDJPY\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:f8d8fc0dbfec42a798b065f5665cdd100239615a839809db68527cf82f2326ba\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":2,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PrevHash\":\"sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66\",\"SignAlgo\":\"ED25519\",\"Signature\":\"F1VkayvpymRV17it13oPgy1eTrS4bVx7VwnjSlfEJp8HiQszaU8qqePN5Tl3tCeZ/J/CRKmyXV+bb+KfwyDADQ==\",\"Version\":\"1.1\"}}\n",
+      "id": "intact",
+      "inclusion_proofs": [
+        {
+          "event_hash": "sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2",
+          "event_id": "01a17fce-787b-7101-8101-010101010101",
+          "index": 0,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "9820869f743ead0a00ffc473cdbf178afd3b0d4182b002b30bca84597fdd6d7e",
+            "e21df98479d547efa1e632184d8d9319267e596e90ac091b5b918c6ca14a4bf9"
+          ],
+          "tree_size": 3
+        },
+        {
+          "event_hash": "sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66",
+          "event_id": "01a17fce-787c-7202-8202-020202020202",
+          "index": 1,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "5f6c558aafe56313ac03907ea5692c08774f96984f0cf9f12c5284ed261cdd12",
+            "e21df98479d547efa1e632184d8d9319267e596e90ac091b5b918c6ca14a4bf9"
+          ],
+          "tree_size": 3
+        },
+        {
+          "event_hash": "sha256:f8d8fc0dbfec42a798b065f5665cdd100239615a839809db68527cf82f2326ba",
+          "event_id": "01a17fce-787d-7303-8303-030303030303",
+          "index": 2,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "0d9891d682b823b58a9b6eeb0bb807b1f249e10dedc313cfe80f730a250046c6"
+          ],
+          "tree_size": 3
+        }
+      ],
+      "title": "Intact signed evidence"
+    },
+    {
+      "anchor_record_json": "{\"EventCount\":3,\"FirstEventID\":\"01a17fce-787b-7101-8101-010101010101\",\"LastEventID\":\"01a17fce-787d-7303-8303-030303030303\",\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SignAlgo\":\"ED25519\",\"Signature\":\"J7tAgIe61IEk7SAqjpLyGCc+pTaDR92MgKO1nPMfKxJVdrDkkfnQSqp53x/PJKG8aiMRIIRmTckCs5+vJp6QAw==\",\"Timestamp\":1793145610123456789}\n",
+      "description": "The order price changes from 151.230 to 999.000; original hashes, signatures, root and proofs are retained so fresh verification detects the change.",
+      "events_jsonl": "{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787b-7101-8101-010101010101\",\"EventType\":\"INIT\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":0,\"TimestampISO\":\"2026-10-28T00:00:00.123456789Z\",\"TimestampInt\":1793145600123456789},\"Payload\":{\"VCP-GOV\":{\"AlgoID\":\"synthetic-demo\",\"AlgoVersion\":\"1.0.0\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":0,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"SignAlgo\":\"ED25519\",\"Signature\":\"OnrjBMRpHoES62CkPAjN/mTIpoikpUFBK+ezGtFsm67V0ZDp2BdeOzobzZOOn269AWKT5x6gDqdcpcJqI7GTCg==\",\"Version\":\"1.1\"}}\n{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787c-7202-8202-020202020202\",\"EventType\":\"SIG\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":1,\"TimestampISO\":\"2026-10-28T00:00:00.124456912Z\",\"TimestampInt\":1793145600124456912},\"Payload\":{\"VCP-TRADE\":{\"Price\":\"151.234\",\"Quantity\":\"100000\",\"Side\":\"BUY\",\"Symbol\":\"USDJPY\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":1,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PrevHash\":\"sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2\",\"SignAlgo\":\"ED25519\",\"Signature\":\"+qZUt6+f5AGZj85VI8SYV4MVLCfce36o2s3lKKhkvEI4c13FnddScSKle7vlkuLAmsEm52MeokOlLagZhZFmAg==\",\"Version\":\"1.1\"}}\n{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787d-7303-8303-030303030303\",\"EventType\":\"ORD\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":2,\"TimestampISO\":\"2026-10-28T00:00:00.125457035Z\",\"TimestampInt\":1793145600125457035},\"Payload\":{\"VCP-TRADE\":{\"OrderType\":\"LIMIT\",\"Price\":\"999.000\",\"Quantity\":\"100000\",\"Side\":\"BUY\",\"Symbol\":\"USDJPY\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:f8d8fc0dbfec42a798b065f5665cdd100239615a839809db68527cf82f2326ba\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":2,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PrevHash\":\"sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66\",\"SignAlgo\":\"ED25519\",\"Signature\":\"F1VkayvpymRV17it13oPgy1eTrS4bVx7VwnjSlfEJp8HiQszaU8qqePN5Tl3tCeZ/J/CRKmyXV+bb+KfwyDADQ==\",\"Version\":\"1.1\"}}\n",
+      "id": "tampered",
+      "inclusion_proofs": [
+        {
+          "event_hash": "sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2",
+          "event_id": "01a17fce-787b-7101-8101-010101010101",
+          "index": 0,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "9820869f743ead0a00ffc473cdbf178afd3b0d4182b002b30bca84597fdd6d7e",
+            "e21df98479d547efa1e632184d8d9319267e596e90ac091b5b918c6ca14a4bf9"
+          ],
+          "tree_size": 3
+        },
+        {
+          "event_hash": "sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66",
+          "event_id": "01a17fce-787c-7202-8202-020202020202",
+          "index": 1,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "5f6c558aafe56313ac03907ea5692c08774f96984f0cf9f12c5284ed261cdd12",
+            "e21df98479d547efa1e632184d8d9319267e596e90ac091b5b918c6ca14a4bf9"
+          ],
+          "tree_size": 3
+        },
+        {
+          "event_hash": "sha256:f8d8fc0dbfec42a798b065f5665cdd100239615a839809db68527cf82f2326ba",
+          "event_id": "01a17fce-787d-7303-8303-030303030303",
+          "index": 2,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "0d9891d682b823b58a9b6eeb0bb807b1f249e10dedc313cfe80f730a250046c6"
+          ],
+          "tree_size": 3
+        }
+      ],
+      "title": "Payload changed after signing"
+    },
+    {
+      "anchor_record_json": "{\"EventCount\":3,\"FirstEventID\":\"01a17fce-787b-7101-8101-010101010101\",\"LastEventID\":\"01a17fce-787d-7303-8303-030303030303\",\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SignAlgo\":\"ED25519\",\"Signature\":\"J7tAgIe61IEk7SAqjpLyGCc+pTaDR92MgKO1nPMfKxJVdrDkkfnQSqp53x/PJKG8aiMRIIRmTckCs5+vJp6QAw==\",\"Timestamp\":1793145610123456789}\n",
+      "description": "The evidence bytes are identical to the intact case. The separate trust configuration supplies no trusted event or root key.",
+      "events_jsonl": "{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787b-7101-8101-010101010101\",\"EventType\":\"INIT\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":0,\"TimestampISO\":\"2026-10-28T00:00:00.123456789Z\",\"TimestampInt\":1793145600123456789},\"Payload\":{\"VCP-GOV\":{\"AlgoID\":\"synthetic-demo\",\"AlgoVersion\":\"1.0.0\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":0,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"SignAlgo\":\"ED25519\",\"Signature\":\"OnrjBMRpHoES62CkPAjN/mTIpoikpUFBK+ezGtFsm67V0ZDp2BdeOzobzZOOn269AWKT5x6gDqdcpcJqI7GTCg==\",\"Version\":\"1.1\"}}\n{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787c-7202-8202-020202020202\",\"EventType\":\"SIG\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":1,\"TimestampISO\":\"2026-10-28T00:00:00.124456912Z\",\"TimestampInt\":1793145600124456912},\"Payload\":{\"VCP-TRADE\":{\"Price\":\"151.234\",\"Quantity\":\"100000\",\"Side\":\"BUY\",\"Symbol\":\"USDJPY\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":1,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PrevHash\":\"sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2\",\"SignAlgo\":\"ED25519\",\"Signature\":\"+qZUt6+f5AGZj85VI8SYV4MVLCfce36o2s3lKKhkvEI4c13FnddScSKle7vlkuLAmsEm52MeokOlLagZhZFmAg==\",\"Version\":\"1.1\"}}\n{\"Header\":{\"ActorID\":\"sdk-demo\",\"ChainID\":\"sdk-explorer-demo-001\",\"EventID\":\"01a17fce-787d-7303-8303-030303030303\",\"EventType\":\"ORD\",\"PolicyID\":\"org.veritaschain.sdk:explorer-demo-v1\",\"SequenceNum\":2,\"TimestampISO\":\"2026-10-28T00:00:00.125457035Z\",\"TimestampInt\":1793145600125457035},\"Payload\":{\"VCP-TRADE\":{\"OrderType\":\"LIMIT\",\"Price\":\"151.230\",\"Quantity\":\"100000\",\"Side\":\"BUY\",\"Symbol\":\"USDJPY\"}},\"Security\":{\"AnchorReference\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"EventHash\":\"sha256:f8d8fc0dbfec42a798b065f5665cdd100239615a839809db68527cf82f2326ba\",\"HashAlgo\":\"SHA256\",\"MerkleIndex\":2,\"MerkleRoot\":\"207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb\",\"PrevHash\":\"sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66\",\"SignAlgo\":\"ED25519\",\"Signature\":\"F1VkayvpymRV17it13oPgy1eTrS4bVx7VwnjSlfEJp8HiQszaU8qqePN5Tl3tCeZ/J/CRKmyXV+bb+KfwyDADQ==\",\"Version\":\"1.1\"}}\n",
+      "id": "missing-key",
+      "inclusion_proofs": [
+        {
+          "event_hash": "sha256:c4c99e0972bdc17447d22ea2d4a9d13c1c9f50dde7b90f75e7f810d759f4c0a2",
+          "event_id": "01a17fce-787b-7101-8101-010101010101",
+          "index": 0,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "9820869f743ead0a00ffc473cdbf178afd3b0d4182b002b30bca84597fdd6d7e",
+            "e21df98479d547efa1e632184d8d9319267e596e90ac091b5b918c6ca14a4bf9"
+          ],
+          "tree_size": 3
+        },
+        {
+          "event_hash": "sha256:c43509de151e2396715ba72130f0d22ba7706f680412b78954540ad0468b2e66",
+          "event_id": "01a17fce-787c-7202-8202-020202020202",
+          "index": 1,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "5f6c558aafe56313ac03907ea5692c08774f96984f0cf9f12c5284ed261cdd12",
+            "e21df98479d547efa1e632184d8d9319267e596e90ac091b5b918c6ca14a4bf9"
+          ],
+          "tree_size": 3
+        },
+        {
+          "event_hash": "sha256:f8d8fc0dbfec42a798b065f5665cdd100239615a839809db68527cf82f2326ba",
+          "event_id": "01a17fce-787d-7303-8303-030303030303",
+          "index": 2,
+          "merkle_root": "207adb5225895fdbed27b016039a8031c389cefe88058f5999d0a8afebc288eb",
+          "proof": [
+            "0d9891d682b823b58a9b6eeb0bb807b1f249e10dedc313cfe80f730a250046c6"
+          ],
+          "tree_size": 3
+        }
+      ],
+      "title": "Trusted key unavailable"
+    }
+  ],
+  "disclosure": [
+    "Synthetic first-party demonstration, not real trading activity or independent validation.",
+    "The public RFC 8032 test key demonstrates cryptographic mechanics; it establishes no identity.",
+    "No external anchor proof is supplied. The full intact-batch result remains INDETERMINATE.",
+    "VALID for local checks is a scoped result, not VCP/VAP conformance or certification.",
+    "The SDK's exact-integer and other interpretations remain non-normative implementation choices."
+  ],
+  "format": "vcp-evidence-demo/1",
+  "sdk_version": "0.1.0",
+  "spec_version": "1.2.0"
+}
