@@ -1,0 +1,22 @@
+{
+  "cases": {
+    "intact": {
+      "actor_public_keys": {
+        "sdk-demo": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+      },
+      "anchor_public_key": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+    },
+    "missing-key": {
+      "actor_public_keys": {},
+      "anchor_public_key": null
+    },
+    "tampered": {
+      "actor_public_keys": {
+        "sdk-demo": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+      },
+      "anchor_public_key": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a"
+    }
+  },
+  "format": "vcp-evidence-demo-trust/1",
+  "notice": "PUBLIC RFC 8032 TEST 1 key, for this synthetic demo only. Anyone can sign with it. This configuration is explicit caller policy and establishes no real-world identity."
+}

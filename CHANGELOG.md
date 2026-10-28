@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+* Added a deterministic SDK → Explorer API → GUI evidence demo with Python-produced
+  signed events, Merkle proofs, separate public-test-key trust configuration, and
+  Python/TypeScript verification tests. Intact, tampered and missing-key cases
+  preserve raw JSON and nanosecond integers. No external anchor is invented;
+  the intact batch's full SDK result remains INDETERMINATE. This is non-normative
+  first-party integration material, not certification or a new SDK release.
 * MQL5 is now compiled and self-tested: `tools/mql5/compile-and-selftest.sh`
   installs MetaTrader 5 under Wine, compiles the self-test and the example EA
   with MetaEditor and runs the self-test in the terminal; the `mql5` CI workflow
