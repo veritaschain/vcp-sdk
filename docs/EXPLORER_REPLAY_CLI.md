@@ -78,6 +78,9 @@ node tools/replay_explorer_demo.mjs --api-url \
   https://veritaschain-evidence-demo.kamimura0000.chatgpt.site/v1/evidence-demo/cases/intact/verification
 ~~~
 
+The HTTP probe openly identifies itself as VCP-Evidence-Replay/0.1 with a
+non-browser User-Agent, as recommended for legitimate clients by Cloudflare's
+Error 1010 guidance. This does not guarantee that the host will grant access.
 A host-level 403, including Cloudflare error 1010, is reported as a transport
 problem and does not change the result of the offline replay. Do not disguise
 client identity to defeat access controls. Use the checked-out fixture, a

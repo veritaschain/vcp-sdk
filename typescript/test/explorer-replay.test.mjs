@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawnSync, spawn } from 'node:child_process';
+import { once } from 'node:events';
+import { createServer } from 'node:http';
 import { readFileSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -100,5 +102,50 @@ test('duplicate detached proof cannot be ignored by local replay', () => {
     assert.ok(report.checks.some(x => x.reason === 'PROOF_SET_MISMATCH' && x.status === 'INVALID'));
   } finally {
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('HTTP probe identifies its application without a forged browser Origin', async () => {
+  const c = bundle.cases.find(x => x.id === 'intact');
+  const api = {
+    format: 'vcp-evidence-demo-verification/1',
+    case_id: 'intact',
+    local_status: 'VALID',
+    overall_status: 'INDETERMINATE',
+    evidence: {
+      events_jsonl: c.events_jsonl,
+      anchor_record_json: c.anchor_record_json,
+      inclusion_proofs: c.inclusion_proofs
+    }
+  };
+  let userAgent;
+  let origin;
+  const server = createServer((req, res) => {
+    userAgent = req.headers['user-agent'];
+    origin = req.headers.origin;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(api));
+  });
+  await new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', resolve);
+  });
+  try {
+    const url = 'http://127.0.0.1:' + server.address().port + '/v1/evidence-demo/cases/intact/verification';
+    const child = spawn(process.execPath, [cli, '--api-url', url, '--json'], {
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    let output = '';
+    let errors = '';
+    child.stdout.on('data', b => { output += b.toString(); });
+    child.stderr.on('data', b => { errors += b.toString(); });
+    const [exitCode] = await once(child, 'close');
+    assert.equal(exitCode, 0, errors);
+    assert.match(userAgent, /^VCP-Evidence-Replay\/0\.1 /);
+    assert.equal(origin, undefined);
+    assert.equal(JSON.parse(output).results[0].matches_api_claim, true);
+  } finally {
+    server.closeAllConnections();
+    await new Promise(resolve => server.close(resolve));
   }
 });
