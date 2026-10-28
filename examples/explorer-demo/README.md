@@ -87,3 +87,17 @@ in [vcp-explorer-api](https://github.com/veritaschain/vcp-explorer-api) and
 [vcp-explorer-gui](https://github.com/veritaschain/vcp-explorer-gui); consult their
 demo setup instructions. Reading or checking this bundle requires no network
 access, external account, production key or real trading system.
+
+## Run an offline verification without a hosted API
+
+The first-party [offline replay CLI](../../docs/EXPLORER_REPLAY_CLI.md)
+recomputes all three cases using the local SDK, or compares a saved public API
+response against local evidence and separately supplied trust configuration.
+It does not rely on the hosted API's verdict or network availability. This is
+**not** an independent implementation or proof of external anchoring.
+
+~~~sh
+npm --prefix typescript ci
+npm --prefix typescript run build
+node tools/replay_explorer_demo.mjs
+~~~
