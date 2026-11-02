@@ -100,11 +100,15 @@ class MerkleTree:
         self.root = self._t.mth(0, self.size)
 
     def inclusion_proof(self, index: int) -> list[bytes]:
+        if not isinstance(index, int) or isinstance(index, bool):
+            raise TypeError("leaf index must be an integer")
         if not 0 <= index < self.size:
             raise IndexError("leaf index out of range")
         return self._t.path(index, 0, self.size)
 
     def consistency_proof(self, first: int) -> list[bytes]:
+        if not isinstance(first, int) or isinstance(first, bool):
+            raise TypeError("first size must be an integer")
         if not 0 <= first <= self.size:
             raise IndexError("first size out of range")
         if first == 0 or first == self.size:

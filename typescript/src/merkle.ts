@@ -63,11 +63,13 @@ export class MerkleTree {
   }
 
   inclusionProof(index: number): Uint8Array[] {
+    if (!Number.isSafeInteger(index)) throw new RangeError("leaf index must be a safe integer");
     if (!(index >= 0 && index < this.size)) throw new RangeError("leaf index out of range");
     return this.path(index, 0, this.size);
   }
 
   consistencyProof(first: number): Uint8Array[] {
+    if (!Number.isSafeInteger(first)) throw new RangeError("first size must be a safe integer");
     if (!(first >= 0 && first <= this.size)) throw new RangeError("first size out of range");
     if (first === 0 || first === this.size) return [];
     return this.subproof(first, 0, this.size, true);
