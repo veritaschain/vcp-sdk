@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+* CI integrity correction (2026-11-02): pin the existing GitHub Actions major
+  versions to verified official tag SHAs and disable checkout credential
+  persistence. MQL5 bootstrap now requires a reviewed SHA-256 and successful
+  MetaQuotes Authenticode verification before Wine starts. A missing pin stops
+  the job; no production installer digest or new Wine compilation result is
+  claimed. Ten synthetic entrypoint regressions exercise the failure gates.
+
 * Added a deterministic SDK → Explorer API → GUI evidence demo with Python-produced
   signed events, Merkle proofs, separate public-test-key trust configuration, and
   Python/TypeScript verification tests. Intact, tampered and missing-key cases

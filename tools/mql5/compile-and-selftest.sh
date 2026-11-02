@@ -3,11 +3,12 @@
 # self-test (Scripts/VeritasChain/VCP_SelfTest.mq5) in the MetaTrader 5 terminal.
 #
 # Linux only. Needs wine (Wine 11 or later; see mql5/README.md), curl, iconv,
-# and Xvfb when no X display is available. osslsigncode, if installed, is used to
-# check that the downloaded installer is signed by MetaQuotes Ltd.
+# and Xvfb when no X display is available. sha256sum and osslsigncode are required.
+# MT5_SETUP_SHA256 must be a separately reviewed expected installer digest; see
+# INSTALLER_REVIEW.md. Hash and publisher signature checks precede Wine startup.
 #
 # The first run downloads the MetaTrader 5 installer from MetaQuotes
-# (download.mql5.com), which then downloads the terminal. Nothing is logged in
+# (the current official download URL), which then downloads the terminal. Nothing is logged in
 # and no trading account is used. MT5_WORK (default: .mt5 in the repository,
 # ignored by git) holds the Wine prefix and the download.
 #
@@ -20,13 +21,47 @@ WORK="${MT5_WORK:-$ROOT/.mt5}"
 export WINEPREFIX="$WORK/prefix" WINEARCH=win64 WINEDEBUG=-all
 export WINEDLLOVERRIDES="mscoree,mshtml="   # skip the Wine Mono and Gecko prompts
 
-for tool in wine wineserver curl iconv; do
+# Require an out-of-band reviewed pin, including when a Wine prefix already exists.
+EXPECTED_SHA256="${MT5_SETUP_SHA256:-}"
+if [[ ! "$EXPECTED_SHA256" =~ ^[0-9a-fA-F]{64}$ ]]; then
+  echo "MT5_SETUP_SHA256 must contain a reviewed 64-digit SHA-256; see INSTALLER_REVIEW.md" >&2
+  exit 3
+fi
+for tool in wine wineboot wineserver curl iconv sha256sum osslsigncode timeout; do
   command -v "$tool" >/dev/null || { echo "$tool not found" >&2; exit 3; }
 done
 
+SETUP="$WORK/dl/mt5setup.exe"
+mkdir -p "$WORK/dl"
+if [ ! -f "$SETUP" ]; then
+  # This URL is linked by https://www.metatrader5.com/en/download.
+  if ! curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+      --tlsv1.2 --output "$SETUP" \
+      'https://download.terminal.free/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_campaign=download&utm_source=www.metatrader5.com'; then
+    echo "MetaTrader installer download failed; nothing will be executed" >&2
+    exit 3
+  fi
+fi
+actual_sha256=$(sha256sum < "$SETUP")
+actual_sha256=${actual_sha256%% *}
+if [ "$actual_sha256" != "${EXPECTED_SHA256,,}" ]; then
+  echo "MetaTrader installer SHA-256 mismatch; nothing will be executed" >&2
+  exit 3
+fi
+if ! signature=$(osslsigncode verify -in "$SETUP" 2>&1); then
+  echo "MetaTrader installer signature verification failed; nothing will be executed" >&2
+  exit 3
+fi
+case "$signature" in
+  *"Subject: /C=CY/L=Limassol/O=MetaQuotes Ltd/CN=MetaQuotes Ltd"*"Signature verification: ok"*) ;;
+  *) echo "MetaTrader installer publisher did not verify as MetaQuotes Ltd" >&2; exit 3 ;;
+esac
+
+# Only start Wine/display processes after both integrity and authenticity gates.
 XVFB=""
+WINE_STARTED=0
 cleanup() {
-  wineserver -k 2>/dev/null || true
+  [ "$WINE_STARTED" -eq 1 ] && wineserver -k 2>/dev/null || true
   [ -n "$XVFB" ] && kill "$XVFB" 2>/dev/null || true
 }
 trap cleanup EXIT
@@ -41,22 +76,11 @@ fi
 utf8() { iconv -f UTF-16LE -t UTF-8 "$1" | tr -d '\r' | sed 's/^\xEF\xBB\xBF//'; }
 
 T="$WINEPREFIX/drive_c/Program Files/MetaTrader 5"
+WINE_STARTED=1
 if [ ! -f "$T/MetaEditor64.exe" ]; then
-  mkdir -p "$WORK/dl"
   [ -d "$WINEPREFIX" ] || wineboot -i >/dev/null 2>&1
-  curl -fsSL -o "$WORK/dl/mt5setup.exe" \
-    https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe
-  if command -v osslsigncode >/dev/null; then
-    sig=$(osslsigncode verify -in "$WORK/dl/mt5setup.exe" 2>&1 || true)
-    case "$sig" in
-      *"Subject: /C=CY/L=Limassol/O=MetaQuotes Ltd/CN=MetaQuotes Ltd"*"Signature verification: ok"*) ;;
-      *) echo "the installer's signature did not verify as MetaQuotes Ltd" >&2; exit 3 ;;
-    esac
-  else
-    echo "warning: osslsigncode not installed; the installer's signature was not checked" >&2
-  fi
   # /auto installs without questions; it exits non-zero after starting the terminal
-  timeout 900 wine "$WORK/dl/mt5setup.exe" /auto >/dev/null 2>&1 || true
+  timeout 900 wine "$SETUP" /auto >/dev/null 2>&1 || true
   wineserver -k 2>/dev/null || true
   [ -f "$T/MetaEditor64.exe" ] || { echo "MetaTrader 5 was not installed" >&2; exit 3; }
 fi

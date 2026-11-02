@@ -16,6 +16,19 @@ Ubuntu 24.04's packaged Wine 9.0 the terminal and MetaEditor stopped at "A
 debugger has been found running in your system" in our environment; use
 WineHQ's builds. The example EA has been compiled, not run against a broker.
 
+**Installer gate (2026-11-02):** New runs require a separately reviewed
+`MT5_SETUP_SHA256` and successful `osslsigncode` verification for MetaQuotes Ltd
+before any Wine process starts. No installer digest is supplied by this change;
+the CI compile job stops until the repository variable contains an approved pin.
+See [the review procedure and verification limits](../tools/mql5/INSTALLER_REVIEW.md).
+The previously recorded compiler results above are historical, not a test of a
+new installer. Synthetic gate regressions run without Wine, network access or an
+executable installer:
+
+```bash
+python -m unittest discover -s tools/mql5 -p 'test_*.py' -v
+```
+
 Before use, compile and run
 `Scripts/VeritasChain/VCP_SelfTest.mq5` (generated from `test-vectors/vectors.json`
 by `tools/gen_mql5_selftest.py`). It checks canonical output for the vector
