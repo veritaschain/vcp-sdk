@@ -32,6 +32,38 @@ def test_empty_tree():
     assert merkle.root([]).hex() == hashlib.sha256(b"").hexdigest()
 
 
+@pytest.mark.parametrize("value", [0.5, 1.5, True, False, "1", None, float("nan"), float("inf")])
+def test_proof_generation_rejects_non_integer_positions(value):
+    """Untrusted positions must not be coerced or recurse on fractional sizes."""
+    ls = leaves(3)
+    tree = merkle.MerkleTree(ls)
+    with pytest.raises(TypeError, match="leaf index must be an integer"):
+        tree.inclusion_proof(value)
+    with pytest.raises(TypeError, match="first size must be an integer"):
+        tree.consistency_proof(value)
+    with pytest.raises(TypeError, match="leaf index must be an integer"):
+        merkle.inclusion_proof(value, ls)
+    with pytest.raises(TypeError, match="first size must be an integer"):
+        merkle.consistency_proof(value, ls)
+
+
+def test_proof_generation_range_boundaries():
+    ls = leaves(3)
+    tree = merkle.MerkleTree(ls)
+    for value in (-1, 3, 4):
+        with pytest.raises(IndexError, match="leaf index out of range"):
+            tree.inclusion_proof(value)
+    for value in (-1, 4):
+        with pytest.raises(IndexError, match="first size out of range"):
+            tree.consistency_proof(value)
+    assert tree.consistency_proof(0) == []
+    assert tree.consistency_proof(tree.size) == []
+    empty = merkle.MerkleTree([])
+    assert empty.consistency_proof(0) == []
+    with pytest.raises(IndexError, match="leaf index out of range"):
+        empty.inclusion_proof(0)
+
+
 @pytest.mark.parametrize("n", range(1, 66))
 def test_inclusion_all_indices(n):
     ls = leaves(n)

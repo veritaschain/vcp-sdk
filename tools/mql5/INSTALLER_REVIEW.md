@@ -14,6 +14,22 @@ also checks the pin, installer bytes and Authenticode verification before starti
 Wine. Its negative-control tests use synthetic non-executable bytes and stub
 commands; they do not validate a real MetaQuotes installer or MQL5 compilation.
 
+## Acquisition-only workflow mode — 2026-11-03
+
+The existing manual `mql5` workflow accepts `mode=installer-review` on the
+review branch. A separate Windows job downloads only the fixed official HTTPS
+URL, refuses redirects, requires Windows `Valid` embedded Authenticode status
+and the expected MetaQuotes Ltd signer, and records certificate details and
+SHA-256 in the job summary and log. It never runs the installer, stores no
+repository variable and removes the temporary file. Its result still requires
+operator review before a pin is configured.
+
+In this mode the normal compile job intentionally exits 3 before checkout or
+Wine, so acquisition cannot satisfy the compiler check. The default `compile`
+mode and push/PR runs retain the reviewed-pin and signature gates. Run that
+separate compile/self-test after approving a digest. The local retry on
+3 November still returned HTTP 403; no approved digest is recorded here.
+
 ## Review and record a pin
 
 1. Obtain the current installer through the link on the

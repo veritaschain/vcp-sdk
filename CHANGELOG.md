@@ -9,6 +9,11 @@
   the job; no production installer digest or new Wine compilation result is
   claimed. Ten synthetic entrypoint regressions exercise the failure gates.
 
+* Installer acquisition review (2026-11-03): add an optional manual Windows
+  mode that records native Authenticode verification, publisher identity and
+  SHA-256 without running the downloaded installer. Evidence still requires
+  operator review; no approved digest or new compiler result is supplied.
+
 * Added a deterministic SDK → Explorer API → GUI evidence demo with Python-produced
   signed events, Merkle proofs, separate public-test-key trust configuration, and
   Python/TypeScript verification tests. Intact, tampered and missing-key cases

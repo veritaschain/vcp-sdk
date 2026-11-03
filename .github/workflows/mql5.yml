@@ -9,6 +9,15 @@ on:
   pull_request:
     paths: ["mql5/**", "tools/mql5/**", ".github/workflows/mql5.yml"]
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Compile with the reviewed pin, or acquire installer review evidence only'
+        type: choice
+        required: false
+        default: compile
+        options:
+          - compile
+          - installer-review
 permissions:
   contents: read
 jobs:
@@ -16,6 +25,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
+      - name: Keep compilation unverified during installer review
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'installer-review' }}
+        run: |
+          echo "Installer review does not run or satisfy compilation/self-test." >&2
+          exit 3
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
@@ -36,3 +50,90 @@ jobs:
         env:
           MT5_SETUP_SHA256: ${{ vars.MT5_SETUP_SHA256 }}
         run: tools/mql5/compile-and-selftest.sh
+
+  installer-acquisition-review:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'installer-review' }}
+    runs-on: windows-2022
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - name: Download and verify the official installer without executing it
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://download.terminal.free/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_campaign=download&utm_source=www.metatrader5.com'
+          $directory = Join-Path $env:RUNNER_TEMP ('mt5-review-' + [guid]::NewGuid().ToString('N'))
+          $installer = Join-Path $directory 'mt5setup.exe'
+          $record = [ordered]@{
+            result = 'FAILED'
+            source_commit = $env:GITHUB_SHA
+            source_ref = $env:GITHUB_REF
+            run_id = $env:GITHUB_RUN_ID
+            original_url = $url
+            review_started_utc = [DateTime]::UtcNow.ToString('o')
+            powershell = $PSVersionTable.PSVersion.ToString()
+            runner_image = $env:ImageOS
+            runner_image_version = $env:ImageVersion
+          }
+          try {
+            New-Item -ItemType Directory -Path $directory | Out-Null
+            # No redirects: a changed distribution endpoint requires a separate review.
+            $request = @{
+              Uri = $url
+              OutFile = $installer
+              MaximumRedirection = 0
+              ConnectionTimeoutSeconds = 30
+              OperationTimeoutSeconds = 60
+            }
+            Invoke-WebRequest @request | Out-Null
+            $record.effective_url = $url
+            $record.retrieved_utc = [DateTime]::UtcNow.ToString('o')
+            $record.size_bytes = (Get-Item -LiteralPath $installer).Length
+            $signature = Get-AuthenticodeSignature -LiteralPath $installer
+            $record.signature_status = [string]$signature.Status
+            $record.signature_status_message = $signature.StatusMessage
+            $record.signature_type = [string]$signature.SignatureType
+            if ($null -eq $signature.SignerCertificate) {
+              throw 'The installer has no signer certificate.'
+            }
+            $certificate = $signature.SignerCertificate
+            $record.signer_certificate = [ordered]@{
+              subject = $certificate.Subject
+              issuer = $certificate.Issuer
+              serial_number = $certificate.SerialNumber
+              thumbprint_sha1 = $certificate.Thumbprint
+              not_before_utc = $certificate.NotBefore.ToUniversalTime().ToString('o')
+              not_after_utc = $certificate.NotAfter.ToUniversalTime().ToString('o')
+            }
+            if ($null -ne $signature.TimeStamperCertificate) {
+              $record.timestamp_certificate = [ordered]@{
+                subject = $signature.TimeStamperCertificate.Subject
+                issuer = $signature.TimeStamperCertificate.Issuer
+                thumbprint_sha1 = $signature.TimeStamperCertificate.Thumbprint
+              }
+            }
+            if ([string]$signature.Status -cne 'Valid' -or [string]$signature.SignatureType -cne 'Authenticode') {
+              throw 'Windows did not validate an embedded Authenticode signature.'
+            }
+            foreach ($field in @('CN=MetaQuotes Ltd', 'O=MetaQuotes Ltd', 'L=Limassol', 'C=CY')) {
+              if ($certificate.Subject -cnotmatch ('(?:^|,\s*)' + [regex]::Escape($field) + '(?:,|$)')) {
+                throw 'The signer does not match the expected MetaQuotes Ltd identity.'
+              }
+            }
+            $record.sha256 = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+            $record.result = 'SIGNATURE_VALID_OPERATOR_REVIEW_REQUIRED'
+          } catch {
+            $record.error = $_.Exception.Message
+            throw
+          } finally {
+            $json = $record | ConvertTo-Json -Depth 4
+            Write-Output $json
+            @('## MetaTrader installer acquisition review', '', '~~~json', $json, '~~~', '',
+              'This is acquisition evidence only. No installer was executed or repository variable changed.',
+              'Review the evidence before configuring MT5_SETUP_SHA256; the separate compile/self-test must still pass.'
+            ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+            if (Test-Path -LiteralPath $directory) {
+              Remove-Item -LiteralPath $directory -Recurse -Force -ErrorAction SilentlyContinue
+            }
+          }
