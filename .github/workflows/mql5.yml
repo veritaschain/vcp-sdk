@@ -52,16 +52,28 @@ jobs:
         run: tools/mql5/compile-and-selftest.sh
 
   installer-acquisition-review:
+    outputs:
+      signer_sha256: ${{ steps.acquire.outputs.signer_sha256 }}
+      installer_sha256: ${{ steps.acquire.outputs.installer_sha256 }}
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'installer-review' }}
     runs-on: windows-2022
     timeout-minutes: 10
     permissions: {}
     steps:
       - name: Download and verify the official installer without executing it
+        id: acquire
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
+          function Test-ReviewedMetaQuotesCertificate {
+            param([object]$Certificate)
+            return ($null -ne $Certificate -and
+              $Certificate.Subject -ceq 'CN=MetaQuotes Ltd., O=MetaQuotes Ltd., S=Lemesos, C=CY' -and
+              $Certificate.Issuer -ceq 'CN=Sectigo Public Code Signing CA E36, O=Sectigo Limited, C=GB' -and
+              $Certificate.SerialNumber -ceq '008ED92F8A2233EEF06D24CC1D66D18277' -and
+              $Certificate.Thumbprint -ceq '5A64A7AED24C33DED342D01D01FA5286F06DA6DC')
+          }
           $url = 'https://download.terminal.free/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_campaign=download&utm_source=www.metatrader5.com'
           $directory = Join-Path $env:RUNNER_TEMP ('mt5-review-' + [guid]::NewGuid().ToString('N'))
           $installer = Join-Path $directory 'mt5setup.exe'
@@ -103,6 +115,7 @@ jobs:
               issuer = $certificate.Issuer
               serial_number = $certificate.SerialNumber
               thumbprint_sha1 = $certificate.Thumbprint
+              sha256_der = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($certificate.RawData)).ToLowerInvariant()
               not_before_utc = $certificate.NotBefore.ToUniversalTime().ToString('o')
               not_after_utc = $certificate.NotAfter.ToUniversalTime().ToString('o')
             }
@@ -116,13 +129,15 @@ jobs:
             if ([string]$signature.Status -cne 'Valid' -or [string]$signature.SignatureType -cne 'Authenticode') {
               throw 'Windows did not validate an embedded Authenticode signature.'
             }
-            foreach ($field in @('CN=MetaQuotes Ltd', 'O=MetaQuotes Ltd', 'L=Limassol', 'C=CY')) {
-              if ($certificate.Subject -cnotmatch ('(?:^|,\s*)' + [regex]::Escape($field) + '(?:,|$)')) {
-                throw 'The signer does not match the expected MetaQuotes Ltd identity.'
-              }
+            if (-not (Test-ReviewedMetaQuotesCertificate $certificate)) {
+              throw 'The signer does not match the reviewed MetaQuotes Ltd. certificate.'
             }
             $record.sha256 = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
             $record.result = 'SIGNATURE_VALID_OPERATOR_REVIEW_REQUIRED'
+            # Evidence outputs are consumed only by the acquisition-only Linux job.
+            @("signer_sha256=$($record.signer_certificate.sha256_der)",
+              "installer_sha256=$($record.sha256)"
+            ) | Add-Content -LiteralPath $env:GITHUB_OUTPUT -Encoding utf8
           } catch {
             $record.error = $_.Exception.Message
             throw
@@ -137,3 +152,77 @@ jobs:
               Remove-Item -LiteralPath $directory -Recurse -Force -ErrorAction SilentlyContinue
             }
           }
+
+  installer-linux-review:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'installer-review' }}
+    needs: installer-acquisition-review
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - name: Install the distribution Authenticode verifier
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends osslsigncode ca-certificates
+      - name: Verify the same installer and signer without executing either
+        env:
+          REVIEW_SIGNER_SHA256: ${{ needs.installer-acquisition-review.outputs.signer_sha256 }}
+          REVIEW_INSTALLER_SHA256: ${{ needs.installer-acquisition-review.outputs.installer_sha256 }}
+        run: |
+          set -euo pipefail
+          export LC_ALL=C
+          [[ "$REVIEW_SIGNER_SHA256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$REVIEW_INSTALLER_SHA256" =~ ^[0-9a-f]{64}$ ]]
+          directory=$(mktemp -d "$RUNNER_TEMP/mt5-linux-review.XXXXXX")
+          trap 'rm -rf -- "$directory"' EXIT
+          url='https://download.terminal.free/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_campaign=download&utm_source=www.metatrader5.com'
+          installer="$directory/mt5setup.exe"
+          effective_url=$(curl --fail --silent --show-error --location --max-redirs 0 \
+            --proto '=https' --proto-redir '=https' --tlsv1.2 --connect-timeout 30 --max-time 60 \
+            --output "$installer" --write-out '%{url_effective}' "$url")
+          [[ "$effective_url" == "$url" ]]
+          actual_sha256=$(sha256sum < "$installer")
+          actual_sha256=${actual_sha256%% *}
+          [[ "$actual_sha256" == "$REVIEW_INSTALLER_SHA256" ]] || {
+            echo 'Windows and Linux acquired different installer bytes; review cannot continue.' >&2
+            exit 3
+          }
+          osslsigncode --version > "$directory/version.txt" 2>&1
+          verify_status=0
+          osslsigncode verify -in "$installer" -require-leaf-hash "sha256:$REVIEW_SIGNER_SHA256" \
+            > "$directory/verification.txt" 2>&1 || verify_status=$?
+          wrong_status=0
+          wrong_leaf=$(printf '%064d' 0)
+          osslsigncode verify -in "$installer" -require-leaf-hash "sha256:$wrong_leaf" \
+            > "$directory/wrong-leaf.txt" 2>&1 || wrong_status=$?
+          REVIEW_DIRECTORY="$directory" REVIEW_URL="$url" REVIEW_STATUS="$verify_status" \
+          REVIEW_WRONG_STATUS="$wrong_status" python3 - <<'PY'
+          from datetime import datetime, timezone
+          import hashlib, json, os
+          from pathlib import Path
+          directory = Path(os.environ['REVIEW_DIRECTORY'])
+          success = int(os.environ['REVIEW_STATUS']) == 0 and int(os.environ['REVIEW_WRONG_STATUS']) != 0
+          record = {
+              'result': 'LINUX_VERIFIED_OPERATOR_REVIEW_REQUIRED' if success else 'FAILED',
+              'source_commit': os.environ['GITHUB_SHA'],
+              'source_ref': os.environ['GITHUB_REF'],
+              'run_id': os.environ['GITHUB_RUN_ID'],
+              'url': os.environ['REVIEW_URL'],
+              'reviewed_utc': datetime.now(timezone.utc).isoformat(),
+              'size_bytes': (directory / 'mt5setup.exe').stat().st_size,
+              'sha256': os.environ['REVIEW_INSTALLER_SHA256'],
+              'expected_signer_sha256_der': os.environ['REVIEW_SIGNER_SHA256'],
+              'ca_bundle_sha256': hashlib.sha256(Path('/etc/ssl/certs/ca-certificates.crt').read_bytes()).hexdigest(),
+              'osslsigncode_version': (directory / 'version.txt').read_text(errors='replace'),
+              'verification_exit_code': int(os.environ['REVIEW_STATUS']),
+              'verification_output': (directory / 'verification.txt').read_text(errors='replace'),
+              'wrong_leaf_exit_code': int(os.environ['REVIEW_WRONG_STATUS']),
+              'wrong_leaf_output': (directory / 'wrong-leaf.txt').read_text(errors='replace'),
+          }
+          rendered = json.dumps(record, indent=2)
+          print(rendered)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write('## Linux installer acquisition review\n\n~~~json\n' + rendered + '\n~~~\n\n')
+              summary.write('No installer or Wine was executed. These are review-only evidence hashes, not approved repository pins.\n')
+          raise SystemExit(0 if success else 3)
+          PY

@@ -1,12 +1,13 @@
 # MetaTrader installer integrity gate
 
-## Review status — 2026-11-02
+## Review status — 2026-11-03
 
 The bootstrap installer needs an operator-reviewed SHA-256 before the Wine job
 can run. **No production installer digest has been approved or fabricated in this
-change.** Both the historical download URL and the current official link returned
-HTTP 403 in the review environment; no downloaded Windows executable was run.
-No publisher-issued checksum was found in the official pages reviewed below.
+change.** Local acquisition attempts returned HTTP 403. A later download-only
+GitHub-hosted Windows run obtained the installer and verified its native
+Authenticode signature, then correctly failed the legacy subject-name policy.
+It did not execute the installer or calculate an approved file pin.
 
 The `mql5` workflow reads the GitHub repository variable `MT5_SETUP_SHA256` and
 fails before installing Wine when it is missing or malformed. The shell script
@@ -14,21 +15,55 @@ also checks the pin, installer bytes and Authenticode verification before starti
 Wine. Its negative-control tests use synthetic non-executable bytes and stub
 commands; they do not validate a real MetaQuotes installer or MQL5 compilation.
 
-## Acquisition-only workflow mode — 2026-11-03
+## Observed certificate evidence — 2026-11-03
+
+[Acquisition run 41608661890, job 125824758297](https://github.com/veritaschain/vcp-sdk/actions/runs/41608661890/job/125824758297)
+ran the workflow at commit `c7671660cbe5a7c2ae49937b147d4e1273aaccfa`.
+At `2026-11-03T09:09:09.0235759Z`, it downloaded 22,902,352 bytes from the fixed
+official URL without redirects. Windows reported `Valid` and `Authenticode`.
+The following values are the observed certificate fields, not inferred names:
+
+| Field | Observed value |
+| --- | --- |
+| Subject | `CN=MetaQuotes Ltd., O=MetaQuotes Ltd., S=Lemesos, C=CY` |
+| Issuer | `CN=Sectigo Public Code Signing CA E36, O=Sectigo Limited, C=GB` |
+| Serial number | `008ED92F8A2233EEF06D24CC1D66D18277` |
+| SHA-1 certificate thumbprint | `5A64A7AED24C33DED342D01D01FA5286F06DA6DC` |
+| Validity | `2026-02-10T00:00:00Z` to `2029-02-09T23:59:59Z` |
+| Timestamp subject | `CN=Certum Timestamp 2026, O=Asseco Data Systems S.A., C=PL` |
+
+The old policy expected `MetaQuotes Ltd` and `L=Limassol`; it therefore denied
+this certificate. The acquisition policy now requires the entire observed subject,
+issuer, serial number and thumbprint exactly, while still requiring native Windows
+signature validation. A successful new review will record the certificate's DER
+SHA-256 and the installer's SHA-256. Neither value is claimed here yet.
+
+## Acquisition-only workflow mode
 
 The existing manual `mql5` workflow accepts `mode=installer-review` on the
-review branch. A separate Windows job downloads only the fixed official HTTPS
-URL, refuses redirects, requires Windows `Valid` embedded Authenticode status
-and the expected MetaQuotes Ltd signer, and records certificate details and
-SHA-256 in the job summary and log. It never runs the installer, stores no
-repository variable and removes the temporary file. Its result still requires
-operator review before a pin is configured.
+review branch. A Windows job downloads only the fixed official HTTPS URL, refuses
+redirects, verifies the signature and exact reviewed certificate identity, and
+records certificate details and SHA-256 in the job summary and log. Its digest
+outputs feed only a dependent Linux acquisition job; they do not configure any
+repository variable or feed the normal compile job.
 
-In this mode the normal compile job intentionally exits 3 before checkout or
-Wine, so acquisition cannot satisfy the compiler check. The default `compile`
-mode and push/PR runs retain the reviewed-pin and signature gates. Run that
-separate compile/self-test after approving a digest. The local retry on
-3 November still returned HTTP 403; no approved digest is recorded here.
+The Linux job downloads the same official URL without redirects, requires the
+same installer bytes as Windows, and runs the distribution's `osslsigncode verify`
+with `-require-leaf-hash sha256:<Windows-verified certificate DER hash>`. That
+native option binds verification to the actual signing certificate rather than a
+subject string somewhere in the certificate chain. The job records the complete
+verification output and requires a deliberately wrong leaf hash to fail. The
+Linux trust check and exact output format remain unverified until this job runs.
+The production Linux subject guard is left unchanged pending that evidence; a
+subsequent reviewed change must pin the observed DER SHA-256 with the native
+leaf-hash option before normal compilation.
+
+Both jobs remove their temporary downloads and never execute the installer or
+Wine. Their evidence still requires operator review before an installer pin is
+configured. In review mode the normal compile job intentionally exits 3 before
+checkout or Wine, so acquisition cannot satisfy the compiler check. The default
+`compile` mode and push/PR runs retain the reviewed-pin and signature gates. Run
+that separate compile/self-test after reviewing the signer and installer pins.
 
 ## Review and record a pin
 
@@ -61,7 +96,9 @@ and treat compiler reproducibility as a separate check.
 - [Official installation guide](https://www.metatrader5.com/en/terminal/help/start_advanced/installation)
   describes its bootstrap downloads and unattended `/auto` installation.
 - [osslsigncode project](https://github.com/mtrojnar/osslsigncode)
-  documents Authenticode verification.
+  documents Authenticode verification. The [2.8 implementation](https://github.com/mtrojnar/osslsigncode/blob/2.8/osslsigncode.c)
+  applies `-require-leaf-hash` to the actual signing certificate and retains
+  signature and trust validation.
 
 The CI action pins were resolved from the official `actions/*` Git tag endpoints
 on 2026-11-02; the existing major versions were preserved:
