@@ -6,13 +6,18 @@
   versions to verified official tag SHAs and disable checkout credential
   persistence. MQL5 bootstrap now requires a reviewed SHA-256 and successful
   MetaQuotes Authenticode verification before Wine starts. A missing pin stops
-  the job; no production installer digest or new Wine compilation result is
-  claimed. Ten synthetic entrypoint regressions exercise the failure gates.
+  the job. The initial revision remained blocked pending installer review.
 
-* Installer acquisition review (2026-11-03): add an optional manual Windows
-  mode that records native Authenticode verification, publisher identity and
-  SHA-256 without running the downloaded installer. Evidence still requires
-  operator review; no approved digest or new compiler result is supplied.
+* Installer acquisition and signer review (2026-11-03): download-only Windows
+  and Linux jobs verified the same official installer and recorded its SHA-256
+  and signing-certificate DER SHA-256. The production gate now binds native
+  Authenticode verification to that exact certificate with `-require-leaf-hash`;
+  Linux accepted the reviewed leaf hash and rejected a deliberately wrong one.
+  The installer digest remains a separately reviewed repository variable, never
+  an automatic acquisition output. Twelve synthetic regressions cover the gates;
+  acquisition does not establish compilation or self-test success. Results are
+  recorded separately in [PR #8 checks](https://github.com/veritaschain/vcp-sdk/pull/8/checks)
+  for their exact source commits.
 
 * Added a deterministic SDK → Explorer API → GUI evidence demo with Python-produced
   signed events, Merkle proofs, separate public-test-key trust configuration, and

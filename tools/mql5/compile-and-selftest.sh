@@ -48,14 +48,15 @@ if [ "$actual_sha256" != "${EXPECTED_SHA256,,}" ]; then
   echo "MetaTrader installer SHA-256 mismatch; nothing will be executed" >&2
   exit 3
 fi
-if ! signature=$(osslsigncode verify -in "$SETUP" 2>&1); then
+# Reviewed signer DER certificate hash; do not accept an environment override.
+# Both native Windows and Linux verification evidence is in INSTALLER_REVIEW.md.
+readonly EXPECTED_SIGNER_CERT_SHA256='c46c2889219dc55761cee7dad37457776ad2829b41880f4c2b0cdab19270f684'
+if ! signature=$(osslsigncode verify -in "$SETUP" \
+    -require-leaf-hash "sha256:$EXPECTED_SIGNER_CERT_SHA256" 2>&1); then
   echo "MetaTrader installer signature verification failed; nothing will be executed" >&2
+  printf '%s\n' "$signature" >&2
   exit 3
 fi
-case "$signature" in
-  *"Subject: /C=CY/L=Limassol/O=MetaQuotes Ltd/CN=MetaQuotes Ltd"*"Signature verification: ok"*) ;;
-  *) echo "MetaTrader installer publisher did not verify as MetaQuotes Ltd" >&2; exit 3 ;;
-esac
 
 # Only start Wine/display processes after both integrity and authenticity gates.
 XVFB=""

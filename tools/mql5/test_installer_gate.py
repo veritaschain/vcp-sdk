@@ -12,7 +12,8 @@ import unittest
 SCRIPT = Path(__file__).with_name('compile-and-selftest.sh')
 PAYLOAD = b'SYNTHETIC installer fixture; never executable.\n'
 DIGEST = hashlib.sha256(PAYLOAD).hexdigest()
-SUBJECT = 'Subject: /C=CY/L=Limassol/O=MetaQuotes Ltd/CN=MetaQuotes Ltd'
+SUBJECT = 'Subject: /C=CY/ST=Lemesos/O=MetaQuotes Ltd./CN=MetaQuotes Ltd.'
+SIGNER_CERT_SHA256 = 'c46c2889219dc55761cee7dad37457776ad2829b41880f4c2b0cdab19270f684'
 
 
 class InstallerGateTests(unittest.TestCase):
@@ -31,7 +32,8 @@ class InstallerGateTests(unittest.TestCase):
             (self.bin / command).symlink_to(shutil.which(command))
         self.env = dict(os.environ, PATH=str(self.bin), DISPLAY=':synthetic',
                         MT5_WORK=str(self.work), MT5_SETUP_SHA256=DIGEST,
-                        GATE_TEST_CALLS=str(self.log), GATE_TEST_SIGNATURE_SUBJECT=SUBJECT)
+                        GATE_TEST_CALLS=str(self.log), GATE_TEST_SIGNATURE_SUBJECT=SUBJECT,
+                        GATE_TEST_SIGNER_SHA256=SIGNER_CERT_SHA256)
         for command in ('wine', 'wineboot', 'wineserver', 'timeout'):
             self.stub(command, "raise SystemExit(73)\n")
         self.stub('curl', """if os.environ.get('GATE_TEST_DOWNLOAD_FAIL'):
@@ -40,8 +42,19 @@ args = sys.argv[1:]
 output = args[args.index('--output') + 1] if '--output' in args else args[args.index('-o') + 1]
 Path(output).write_bytes(b'SYNTHETIC installer fixture; never executable.\\n')
 """)
-        self.stub('osslsigncode', """print(os.environ['GATE_TEST_SIGNATURE_SUBJECT'])
+        self.stub('osslsigncode', f"""expected_leaf = 'sha256:{SIGNER_CERT_SHA256}'
+expected_args = ['verify', '-in', str(Path(os.environ['MT5_WORK']) / 'dl/mt5setup.exe'),
+                 '-require-leaf-hash', expected_leaf]
+if sys.argv[1:] != expected_args:
+    print('Synthetic verifier requires the exact reviewed leaf-hash argument.')
+    raise SystemExit(97)
+print(os.environ['GATE_TEST_SIGNATURE_SUBJECT'])
+# Success-looking text cannot override a failed native verification exit status.
 print('Signature verification: ok')
+if 'sha256:' + os.environ['GATE_TEST_SIGNER_SHA256'] != expected_leaf:
+    print('Leaf hash match: failed')
+    raise SystemExit(1)
+print('Leaf hash match: ok')
 raise SystemExit(int(os.environ.get('GATE_TEST_SIGNATURE_EXIT', '0')))
 """)
 
@@ -83,7 +96,19 @@ raise SystemExit(int(os.environ.get('GATE_TEST_SIGNATURE_EXIT', '0')))
 
     def test_wrong_publisher_cannot_start_wine(self):
         self.env['GATE_TEST_SIGNATURE_SUBJECT'] = 'Subject: /CN=Another Publisher'
-        self.assert_denied_without_wine('publisher did not verify')
+        self.env['GATE_TEST_SIGNER_SHA256'] = '0' * 64
+        self.assert_denied_without_wine('signature verification failed')
+
+    def test_matching_subject_text_cannot_bypass_wrong_signer(self):
+        self.env['GATE_TEST_SIGNER_SHA256'] = '0' * 64
+        self.assert_denied_without_wine('signature verification failed')
+
+    def test_environment_cannot_replace_reviewed_signer_pin(self):
+        self.env['EXPECTED_SIGNER_CERT_SHA256'] = '0' * 64
+        result, calls = self.run_script()
+        self.assertEqual(result.returncode, 73, result.stderr)
+        self.assertEqual(calls[:3], ['curl', 'osslsigncode', 'wineboot'])
+        self.assertNotIn('wine', calls)
 
     def test_signature_verifier_is_mandatory(self):
         (self.bin / 'osslsigncode').unlink()
