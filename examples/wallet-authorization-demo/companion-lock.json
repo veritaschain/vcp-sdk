@@ -1,10 +1,10 @@
 {
   "experiment": "experiments/wallet-authorization-evidence",
   "files": {
-    "fixtures.py": "sha256:7a4db30204c5c0c8924fac1c4531ceffcfae1dd0251d3f2c5173bff29c41648e",
+    "fixtures.py": "sha256:ac7999d6d483c0ec581d8e7b59e304d5663c4ddfac0ad28f33d976133370abb3",
     "wallet_evidence.py": "sha256:6ad93ea27fc49951f00f327a68186c4849e3f51a5aff5e43538168cbd2e2e746"
   },
   "repository": "https://github.com/veritaschain/vap-spec",
   "schema": "vcp-wallet-demo-companion-lock/1",
-  "source_commit": "45658b4ee75f1a9e96b2df5b0a693b2d90b548a2"
+  "source_commit": "7bdec510e3ed1f15a8362d30516acd7b161b9987"
 }
