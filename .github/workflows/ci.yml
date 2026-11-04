@@ -23,6 +23,8 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version: "1.24"
+      - name: Installer integrity gate regressions (synthetic, no Wine)
+        run: python -m unittest discover -s tools/mql5 -p 'test_*.py' -v
       - name: Python tests
         working-directory: python
         run: |
