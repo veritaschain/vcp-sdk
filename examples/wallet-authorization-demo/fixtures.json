@@ -1,0 +1,809 @@
+{
+  "cases": {
+    "approval_mismatch": {
+      "evaluation_time": 1804723200,
+      "recorded_event": {
+        "Header": {
+          "ActorID": "wallet-demo:synthetic-recorder",
+          "ChainID": "wallet-demo:audit-stream",
+          "EventID": "01a431e2-a000-7664-8240-ad50721aa427",
+          "EventType": "SYS_AUDIT",
+          "PolicyID": "wallet-demo:research-only-v0",
+          "SequenceNum": 0,
+          "TimestampISO": "2027-03-11T00:00:00.000Z",
+          "TimestampInt": 1804723200000000000
+        },
+        "Payload": {
+          "ExperimentalWalletEvidence": {
+            "Bundle": {
+              "evidence": {
+                "approval": {
+                  "key_id": "synthetic-approval_authority",
+                  "payload": {
+                    "actor_id": "synthetic-developer-001",
+                    "approval_id": "synthetic-approval-001",
+                    "approver_id": "synthetic-approver-001",
+                    "credential_id": "synthetic-credential-001",
+                    "expires_at": 1804723320,
+                    "issued_at": 1804723170,
+                    "kind": "approval",
+                    "operation_digest": "sha256:b2c6d408137fee6f64c69409e43a55be2fd37ef1c1fb8fe5b31791bf2217245b",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "run_id": "synthetic-wallet-run-001"
+                  },
+                  "signature": "cd980b9d3e4b374018d96d82930ecae6dabe7322cf523667b2f4c9d6562a09fb003fe461355bef934c6ef4a3f821bc4368076be7247c5148793f0efd20d66604"
+                },
+                "chain_observation": {
+                  "key_id": "synthetic-chain_observer",
+                  "payload": {
+                    "block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "block_number": "100",
+                    "chain_id": "31337",
+                    "delegation_code": "0xef01004444444444444444444444444444444444444444",
+                    "execution_digest": "sha256:05d89e76332bb8efac3f831d9fd80c5bedb570e866d13db9f583b6224a11043f",
+                    "finality": "observed_block",
+                    "kind": "chain_observation",
+                    "observed_at": 1804723199,
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "receipt_status": "success",
+                    "run_id": "synthetic-wallet-run-001",
+                    "transaction_block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "transaction_block_number": "100",
+                    "transaction_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                    "wallet": "0x1111111111111111111111111111111111111111"
+                  },
+                  "signature": "099f8fa59d369585d6eaf789bad178f4c7b271db30566255567dd28f88d388e032d0aa6b9f830e48eea3a30ecd5868a9f034a875874ef46dbe201346df127502"
+                },
+                "control_observation": {
+                  "key_id": "synthetic-control_observer",
+                  "payload": {
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "control_observation",
+                    "observation_boundary": "synthetic named routes; privileged controller outside trust",
+                    "observed_at": 1804723197,
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "routes": {
+                      "approved_gate": "recorded",
+                      "deployment_signer": "blocked",
+                      "direct_signer": "blocked"
+                    },
+                    "run_id": "synthetic-wallet-run-001",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "7a0b6f521863181daea3260f87afb0cca6a52def978d9bd857f0b837c1e8bebb249f8bbfeaf5bf8753814b5e52958d9548168bb308e29a5be6767c3173485609"
+                },
+                "execution": {
+                  "key_id": "synthetic-execution_observer",
+                  "payload": {
+                    "actual_operation": {
+                      "action": "delegate",
+                      "actor_id": "synthetic-developer-001",
+                      "amount": "0",
+                      "asset": "native",
+                      "calldata": "0x",
+                      "chain_id": "31337",
+                      "credential_id": "synthetic-credential-001",
+                      "delegation_target": "0x4444444444444444444444444444444444444444",
+                      "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                      "destination": "0x2222222222222222222222222222222222222222",
+                      "nonce": "7",
+                      "operation_id": "synthetic-operation-001",
+                      "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                      "signing_payload_digest": "sha256:270d180db2689beb5d9a0753eb4febfee690df2ceb6d51d892e426b71e336e75",
+                      "wallet": "0x1111111111111111111111111111111111111111",
+                      "workload_id": "synthetic-wallet-worker"
+                    },
+                    "approval_digest": "sha256:a697da7edf978572998cf96edca5e532da1c7e677d5725588dee9c12143ddfdb",
+                    "control_digest": "sha256:4e30c065904e65615211abd5e67f6782d489c4e58375d8dff7c3aa9cebe2aed4",
+                    "kind": "execution",
+                    "observed_at": 1804723198,
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revocation_digest": "sha256:cecfc330f17a3f219b9a48fc4bef9b7d8a22ab61716882deb123122141e8f9cc",
+                    "run_id": "synthetic-wallet-run-001",
+                    "signing_payload": "0x7b22646f6d61696e223a2273796e7468657469632d77616c6c65742d696e74656e742d7630222c226f7065726174696f6e223a7b22616374696f6e223a2264656c6567617465222c226163746f725f6964223a2273796e7468657469632d646576656c6f7065722d303031222c22616d6f756e74223a2230222c226173736574223a226e6174697665222c2263616c6c64617461223a223078222c22636861696e5f6964223a223331333337222c2263726564656e7469616c5f6964223a2273796e7468657469632d63726564656e7469616c2d303031222c2264656c65676174696f6e5f746172676574223a22307834343434343434343434343434343434343434343434343434343434343434343434343434343434222c226465706c6f796d656e745f646967657374223a227368613235363a32326564653436623637336333653138663265346461373064333937643037663339313237636561666534306431306338633530653763303030366331393033222c2264657374696e6174696f6e223a22307832323232323232323232323232323232323232323232323232323232323232323232323232323232222c226e6f6e6365223a2237222c226f7065726174696f6e5f6964223a2273796e7468657469632d6f7065726174696f6e2d303031222c22706f6c6963795f646967657374223a227368613235363a32353439663331356330326666663938663637333739373131613062373331643034363434623035343061613837303738623730376338616162303562376261222c2277616c6c6574223a22307831313131313131313131313131313131313131313131313131313131313131313131313131313131222c22776f726b6c6f61645f6964223a2273796e7468657469632d77616c6c65742d776f726b6572227d7d",
+                    "state": "included"
+                  },
+                  "signature": "b5d118791faee184433e770ee292adbb50fa49d01831e1387e32f85b65cc0e28812c8a1e701904d7e4998eb2d0587baaa2f2e0bf73012e81ed75fff5437c4a0c"
+                },
+                "final_revocation": {
+                  "key_id": "synthetic-revocation_authority",
+                  "payload": {
+                    "approval_digest": "sha256:a697da7edf978572998cf96edca5e532da1c7e677d5725588dee9c12143ddfdb",
+                    "checked_at": 1804723197,
+                    "kind": "final_revocation",
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revoked_approvals": [],
+                    "revoked_credentials": [],
+                    "run_id": "synthetic-wallet-run-001",
+                    "snapshot_id": "synthetic-snapshot-001",
+                    "valid_until": 1804723230
+                  },
+                  "signature": "c757f02d3ba5272952ecad19bf603e81cc3a4309ffbc8bc25e13112894651c59cf0531472b46e4c15332292e4d3e766989c563cf734491dab8200ea260d0f906"
+                },
+                "policy": {
+                  "key_id": "synthetic-policy_authority",
+                  "payload": {
+                    "actor_id": "synthetic-developer-001",
+                    "allowed_actions": [
+                      "transfer",
+                      "delegate",
+                      "clear_delegation"
+                    ],
+                    "allowed_assets": [
+                      "native"
+                    ],
+                    "allowed_chains": [
+                      "31337"
+                    ],
+                    "allowed_delegation_targets": [
+                      "0x4444444444444444444444444444444444444444",
+                      "0x0000000000000000000000000000000000000000"
+                    ],
+                    "allowed_destinations": [
+                      "0x2222222222222222222222222222222222222222",
+                      "0x3333333333333333333333333333333333333333"
+                    ],
+                    "allowed_wallets": [
+                      "0x1111111111111111111111111111111111111111"
+                    ],
+                    "credential_id": "synthetic-credential-001",
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "policy",
+                    "max_amount": "1000000",
+                    "policy_id": "synthetic-policy-001",
+                    "required_finality": "observed_block",
+                    "required_routes": [
+                      "approved_gate",
+                      "direct_signer",
+                      "deployment_signer"
+                    ],
+                    "run_id": "synthetic-wallet-run-001",
+                    "valid_from": 1804722600,
+                    "valid_until": 1804723800,
+                    "version": "1",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "26d74a081ba4ffb0e62342093d9788ff82ba333b3b1d4c289545ffa32c7347c478e6e90ffc17f13f211984ca096ff6e91d07c08ac52c99e3bcbd79b4bd59e20e"
+                }
+              },
+              "operation": {
+                "action": "delegate",
+                "actor_id": "synthetic-developer-001",
+                "amount": "0",
+                "asset": "native",
+                "calldata": "0x",
+                "chain_id": "31337",
+                "credential_id": "synthetic-credential-001",
+                "delegation_target": "0x4444444444444444444444444444444444444444",
+                "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                "destination": "0x2222222222222222222222222222222222222222",
+                "nonce": "7",
+                "operation_id": "synthetic-operation-001",
+                "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                "signing_payload_digest": "sha256:270d180db2689beb5d9a0753eb4febfee690df2ceb6d51d892e426b71e336e75",
+                "wallet": "0x1111111111111111111111111111111111111111",
+                "workload_id": "synthetic-wallet-worker"
+              },
+              "run_id": "synthetic-wallet-run-001",
+              "schema": "experimental-wallet-authorization-bundle-v0",
+              "synthetic": true
+            },
+            "Case": "approval_mismatch"
+          }
+        },
+        "Security": {
+          "EventHash": "sha256:e34b9d436856e1b5bde45c2ae8720103118b1e8a8164cbbd5dd631cf5ae6fb0f",
+          "HashAlgo": "SHA256",
+          "SignAlgo": "ED25519",
+          "Signature": "RCfXPuRwA3quBEcZ81rwhIaCM4eMtIRzos9FqkQc75pTw39nZeknVsdMk5ys7pSULeLK/t215GqpMcX2ZweVAQ==",
+          "Version": "1.1"
+        }
+      }
+    },
+    "clear_observed": {
+      "evaluation_time": 1804723200,
+      "recorded_event": {
+        "Header": {
+          "ActorID": "wallet-demo:synthetic-recorder",
+          "ChainID": "wallet-demo:audit-stream",
+          "EventID": "01a431e2-a000-78fe-9a56-d1c46bc92407",
+          "EventType": "SYS_AUDIT",
+          "PolicyID": "wallet-demo:research-only-v0",
+          "SequenceNum": 0,
+          "TimestampISO": "2027-03-11T00:00:00.000Z",
+          "TimestampInt": 1804723200000000000
+        },
+        "Payload": {
+          "ExperimentalWalletEvidence": {
+            "Bundle": {
+              "evidence": {
+                "approval": {
+                  "key_id": "synthetic-approval_authority",
+                  "payload": {
+                    "actor_id": "synthetic-developer-001",
+                    "approval_id": "synthetic-approval-001",
+                    "approver_id": "synthetic-approver-001",
+                    "credential_id": "synthetic-credential-001",
+                    "expires_at": 1804723320,
+                    "issued_at": 1804723170,
+                    "kind": "approval",
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "run_id": "synthetic-wallet-run-001"
+                  },
+                  "signature": "b403e2a05b6265d697c0ad67ae9e91a25011a74976336f0b7d0d1e0f89438cb4420a7e1428e41d61df5bdb5a067aea2430506a75ee5c5d0688ce798444b55d0f"
+                },
+                "chain_observation": {
+                  "key_id": "synthetic-chain_observer",
+                  "payload": {
+                    "block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "block_number": "100",
+                    "chain_id": "31337",
+                    "delegation_code": "0x",
+                    "execution_digest": "sha256:0e8d736b32d03daec848da0d65b7974a446dc1bcd44b45919e5e5019821f00db",
+                    "finality": "observed_block",
+                    "kind": "chain_observation",
+                    "observed_at": 1804723199,
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "receipt_status": "success",
+                    "run_id": "synthetic-wallet-run-001",
+                    "transaction_block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "transaction_block_number": "100",
+                    "transaction_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                    "wallet": "0x1111111111111111111111111111111111111111"
+                  },
+                  "signature": "1b85782d821e7215ca1f33c60f698cf0212d6e73795c1b7c03b5b474e07d112bca08dd32e4894065636841dd141ac3b6c5c7e072649ae61c5f28e48d67a84204"
+                },
+                "control_observation": {
+                  "key_id": "synthetic-control_observer",
+                  "payload": {
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "control_observation",
+                    "observation_boundary": "synthetic named routes; privileged controller outside trust",
+                    "observed_at": 1804723197,
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "routes": {
+                      "approved_gate": "recorded",
+                      "deployment_signer": "blocked",
+                      "direct_signer": "blocked"
+                    },
+                    "run_id": "synthetic-wallet-run-001",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "65ba1df25319f867e938aa400de049fd9eb8937e34448d04021400ab977eced3c3bfe7f50a4853f8bb00d1d32be0507bfaf91a44148698fa58b5ed307f1cd200"
+                },
+                "execution": {
+                  "key_id": "synthetic-execution_observer",
+                  "payload": {
+                    "actual_operation": {
+                      "action": "clear_delegation",
+                      "actor_id": "synthetic-developer-001",
+                      "amount": "0",
+                      "asset": "native",
+                      "calldata": "0x",
+                      "chain_id": "31337",
+                      "credential_id": "synthetic-credential-001",
+                      "delegation_target": "0x0000000000000000000000000000000000000000",
+                      "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                      "destination": "0x2222222222222222222222222222222222222222",
+                      "nonce": "7",
+                      "operation_id": "synthetic-operation-001",
+                      "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                      "signing_payload_digest": "sha256:c189045ff85a5cf45b634289658ac53b1666d77730c2e950532d4f3b0872b406",
+                      "wallet": "0x1111111111111111111111111111111111111111",
+                      "workload_id": "synthetic-wallet-worker"
+                    },
+                    "approval_digest": "sha256:0b01b4c655e37ef8180d804e0091688c1a3d05e622143225f587e6219fa19255",
+                    "control_digest": "sha256:ca9928891e848213dfe5c537d4e991fb30be1b6da210fb0df04f8011c31d8d2c",
+                    "kind": "execution",
+                    "observed_at": 1804723198,
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revocation_digest": "sha256:327f638b221e13014c6450379addeb3b551588414096dfbaa8fcdbba6d3ecf3d",
+                    "run_id": "synthetic-wallet-run-001",
+                    "signing_payload": "0x7b22646f6d61696e223a2273796e7468657469632d77616c6c65742d696e74656e742d7630222c226f7065726174696f6e223a7b22616374696f6e223a22636c6561725f64656c65676174696f6e222c226163746f725f6964223a2273796e7468657469632d646576656c6f7065722d303031222c22616d6f756e74223a2230222c226173736574223a226e6174697665222c2263616c6c64617461223a223078222c22636861696e5f6964223a223331333337222c2263726564656e7469616c5f6964223a2273796e7468657469632d63726564656e7469616c2d303031222c2264656c65676174696f6e5f746172676574223a22307830303030303030303030303030303030303030303030303030303030303030303030303030303030222c226465706c6f796d656e745f646967657374223a227368613235363a32326564653436623637336333653138663265346461373064333937643037663339313237636561666534306431306338633530653763303030366331393033222c2264657374696e6174696f6e223a22307832323232323232323232323232323232323232323232323232323232323232323232323232323232222c226e6f6e6365223a2237222c226f7065726174696f6e5f6964223a2273796e7468657469632d6f7065726174696f6e2d303031222c22706f6c6963795f646967657374223a227368613235363a32353439663331356330326666663938663637333739373131613062373331643034363434623035343061613837303738623730376338616162303562376261222c2277616c6c6574223a22307831313131313131313131313131313131313131313131313131313131313131313131313131313131222c22776f726b6c6f61645f6964223a2273796e7468657469632d77616c6c65742d776f726b6572227d7d",
+                    "state": "included"
+                  },
+                  "signature": "244bc3b40c892432ee4c6a3909dc2781027028734d55bc3f8cff6393244cd3ed8297136fb3eb2df6aaa61e4fe2ba9835f119cc1e5a38561f8b92f25c81f7f20e"
+                },
+                "final_revocation": {
+                  "key_id": "synthetic-revocation_authority",
+                  "payload": {
+                    "approval_digest": "sha256:0b01b4c655e37ef8180d804e0091688c1a3d05e622143225f587e6219fa19255",
+                    "checked_at": 1804723197,
+                    "kind": "final_revocation",
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revoked_approvals": [],
+                    "revoked_credentials": [],
+                    "run_id": "synthetic-wallet-run-001",
+                    "snapshot_id": "synthetic-snapshot-001",
+                    "valid_until": 1804723230
+                  },
+                  "signature": "46dc4a2644ff24a37b8c58133a8b4049e75470aa7beffa0ab39628e65ce7fd897446b3632af738915cc47dca9ee5dbcc9f8865d1ae69b564f9eeb1093493d00a"
+                },
+                "policy": {
+                  "key_id": "synthetic-policy_authority",
+                  "payload": {
+                    "actor_id": "synthetic-developer-001",
+                    "allowed_actions": [
+                      "transfer",
+                      "delegate",
+                      "clear_delegation"
+                    ],
+                    "allowed_assets": [
+                      "native"
+                    ],
+                    "allowed_chains": [
+                      "31337"
+                    ],
+                    "allowed_delegation_targets": [
+                      "0x4444444444444444444444444444444444444444",
+                      "0x0000000000000000000000000000000000000000"
+                    ],
+                    "allowed_destinations": [
+                      "0x2222222222222222222222222222222222222222",
+                      "0x3333333333333333333333333333333333333333"
+                    ],
+                    "allowed_wallets": [
+                      "0x1111111111111111111111111111111111111111"
+                    ],
+                    "credential_id": "synthetic-credential-001",
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "policy",
+                    "max_amount": "1000000",
+                    "policy_id": "synthetic-policy-001",
+                    "required_finality": "observed_block",
+                    "required_routes": [
+                      "approved_gate",
+                      "direct_signer",
+                      "deployment_signer"
+                    ],
+                    "run_id": "synthetic-wallet-run-001",
+                    "valid_from": 1804722600,
+                    "valid_until": 1804723800,
+                    "version": "1",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "26d74a081ba4ffb0e62342093d9788ff82ba333b3b1d4c289545ffa32c7347c478e6e90ffc17f13f211984ca096ff6e91d07c08ac52c99e3bcbd79b4bd59e20e"
+                }
+              },
+              "operation": {
+                "action": "clear_delegation",
+                "actor_id": "synthetic-developer-001",
+                "amount": "0",
+                "asset": "native",
+                "calldata": "0x",
+                "chain_id": "31337",
+                "credential_id": "synthetic-credential-001",
+                "delegation_target": "0x0000000000000000000000000000000000000000",
+                "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                "destination": "0x2222222222222222222222222222222222222222",
+                "nonce": "7",
+                "operation_id": "synthetic-operation-001",
+                "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                "signing_payload_digest": "sha256:c189045ff85a5cf45b634289658ac53b1666d77730c2e950532d4f3b0872b406",
+                "wallet": "0x1111111111111111111111111111111111111111",
+                "workload_id": "synthetic-wallet-worker"
+              },
+              "run_id": "synthetic-wallet-run-001",
+              "schema": "experimental-wallet-authorization-bundle-v0",
+              "synthetic": true
+            },
+            "Case": "clear_observed"
+          }
+        },
+        "Security": {
+          "EventHash": "sha256:861d0dbcd68d4814b59761aa7423d33697047faedece466916b8293ac794caf5",
+          "HashAlgo": "SHA256",
+          "SignAlgo": "ED25519",
+          "Signature": "Jxj4xDrtIElsFttyti7xak/5mY5UTX0sWcNJXzDIn5aLwOUlsxZUfJZyzj1TWS+UoOd2sHYRWM1k4sBEEHc6Cg==",
+          "Version": "1.1"
+        }
+      }
+    },
+    "missing_approval": {
+      "evaluation_time": 1804723200,
+      "recorded_event": {
+        "Header": {
+          "ActorID": "wallet-demo:synthetic-recorder",
+          "ChainID": "wallet-demo:audit-stream",
+          "EventID": "01a431e2-a000-7660-9841-8e6254ec1fc3",
+          "EventType": "SYS_AUDIT",
+          "PolicyID": "wallet-demo:research-only-v0",
+          "SequenceNum": 0,
+          "TimestampISO": "2027-03-11T00:00:00.000Z",
+          "TimestampInt": 1804723200000000000
+        },
+        "Payload": {
+          "ExperimentalWalletEvidence": {
+            "Bundle": {
+              "evidence": {
+                "chain_observation": {
+                  "key_id": "synthetic-chain_observer",
+                  "payload": {
+                    "block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "block_number": "100",
+                    "chain_id": "31337",
+                    "delegation_code": "0xef01004444444444444444444444444444444444444444",
+                    "execution_digest": "sha256:345ed9f77c7d56b0159464b8e960504743fc5adaa5a01e8758d760224d39015c",
+                    "finality": "observed_block",
+                    "kind": "chain_observation",
+                    "observed_at": 1804723199,
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "receipt_status": "success",
+                    "run_id": "synthetic-wallet-run-001",
+                    "transaction_block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "transaction_block_number": "100",
+                    "transaction_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                    "wallet": "0x1111111111111111111111111111111111111111"
+                  },
+                  "signature": "c4ef29ecfe9ca6fff7ff04ce5ac13dcc72dcfaae83775f0c97322c8b4548f663e1dfa1d2f9b36650a03b7de7febc11ca0ac087561250fa44ae81470d87af3503"
+                },
+                "control_observation": {
+                  "key_id": "synthetic-control_observer",
+                  "payload": {
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "control_observation",
+                    "observation_boundary": "synthetic named routes; privileged controller outside trust",
+                    "observed_at": 1804723197,
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "routes": {
+                      "approved_gate": "recorded",
+                      "deployment_signer": "blocked",
+                      "direct_signer": "blocked"
+                    },
+                    "run_id": "synthetic-wallet-run-001",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "7a0b6f521863181daea3260f87afb0cca6a52def978d9bd857f0b837c1e8bebb249f8bbfeaf5bf8753814b5e52958d9548168bb308e29a5be6767c3173485609"
+                },
+                "execution": {
+                  "key_id": "synthetic-execution_observer",
+                  "payload": {
+                    "actual_operation": {
+                      "action": "delegate",
+                      "actor_id": "synthetic-developer-001",
+                      "amount": "0",
+                      "asset": "native",
+                      "calldata": "0x",
+                      "chain_id": "31337",
+                      "credential_id": "synthetic-credential-001",
+                      "delegation_target": "0x4444444444444444444444444444444444444444",
+                      "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                      "destination": "0x2222222222222222222222222222222222222222",
+                      "nonce": "7",
+                      "operation_id": "synthetic-operation-001",
+                      "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                      "signing_payload_digest": "sha256:270d180db2689beb5d9a0753eb4febfee690df2ceb6d51d892e426b71e336e75",
+                      "wallet": "0x1111111111111111111111111111111111111111",
+                      "workload_id": "synthetic-wallet-worker"
+                    },
+                    "approval_digest": "sha256:1593c06b966e086ad10d361dd3f28c6e3ba2dd759d24bc281f74882c64d3c3b5",
+                    "control_digest": "sha256:4e30c065904e65615211abd5e67f6782d489c4e58375d8dff7c3aa9cebe2aed4",
+                    "kind": "execution",
+                    "observed_at": 1804723198,
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revocation_digest": "sha256:508e667b15206946057ccd92cd891295bd394c4c1b6090e1aa57726954bb32fa",
+                    "run_id": "synthetic-wallet-run-001",
+                    "signing_payload": "0x7b22646f6d61696e223a2273796e7468657469632d77616c6c65742d696e74656e742d7630222c226f7065726174696f6e223a7b22616374696f6e223a2264656c6567617465222c226163746f725f6964223a2273796e7468657469632d646576656c6f7065722d303031222c22616d6f756e74223a2230222c226173736574223a226e6174697665222c2263616c6c64617461223a223078222c22636861696e5f6964223a223331333337222c2263726564656e7469616c5f6964223a2273796e7468657469632d63726564656e7469616c2d303031222c2264656c65676174696f6e5f746172676574223a22307834343434343434343434343434343434343434343434343434343434343434343434343434343434222c226465706c6f796d656e745f646967657374223a227368613235363a32326564653436623637336333653138663265346461373064333937643037663339313237636561666534306431306338633530653763303030366331393033222c2264657374696e6174696f6e223a22307832323232323232323232323232323232323232323232323232323232323232323232323232323232222c226e6f6e6365223a2237222c226f7065726174696f6e5f6964223a2273796e7468657469632d6f7065726174696f6e2d303031222c22706f6c6963795f646967657374223a227368613235363a32353439663331356330326666663938663637333739373131613062373331643034363434623035343061613837303738623730376338616162303562376261222c2277616c6c6574223a22307831313131313131313131313131313131313131313131313131313131313131313131313131313131222c22776f726b6c6f61645f6964223a2273796e7468657469632d77616c6c65742d776f726b6572227d7d",
+                    "state": "included"
+                  },
+                  "signature": "ebbe0ef85199ea7d20eece53964e7d92a17ec32dba9193ddd686a0b9ed70e7286813a7584762b024f8952447f79ac8834ac8418d102ec9e6b242b2041235dc07"
+                },
+                "final_revocation": {
+                  "key_id": "synthetic-revocation_authority",
+                  "payload": {
+                    "approval_digest": "sha256:1593c06b966e086ad10d361dd3f28c6e3ba2dd759d24bc281f74882c64d3c3b5",
+                    "checked_at": 1804723197,
+                    "kind": "final_revocation",
+                    "operation_digest": "sha256:9c01bf080bc212be7d254b3e019dc7a5418435980e6bab3a8fade1c0af47ef99",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revoked_approvals": [],
+                    "revoked_credentials": [],
+                    "run_id": "synthetic-wallet-run-001",
+                    "snapshot_id": "synthetic-snapshot-001",
+                    "valid_until": 1804723230
+                  },
+                  "signature": "93f3cb7bed332ccfc2bf995a0efb541378937388e36cda2ced4c0c702df40223eb4ccfd593bb336ab81c9c8682585554e7274a70afc314414644c5ff4581860d"
+                },
+                "policy": {
+                  "key_id": "synthetic-policy_authority",
+                  "payload": {
+                    "actor_id": "synthetic-developer-001",
+                    "allowed_actions": [
+                      "transfer",
+                      "delegate",
+                      "clear_delegation"
+                    ],
+                    "allowed_assets": [
+                      "native"
+                    ],
+                    "allowed_chains": [
+                      "31337"
+                    ],
+                    "allowed_delegation_targets": [
+                      "0x4444444444444444444444444444444444444444",
+                      "0x0000000000000000000000000000000000000000"
+                    ],
+                    "allowed_destinations": [
+                      "0x2222222222222222222222222222222222222222",
+                      "0x3333333333333333333333333333333333333333"
+                    ],
+                    "allowed_wallets": [
+                      "0x1111111111111111111111111111111111111111"
+                    ],
+                    "credential_id": "synthetic-credential-001",
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "policy",
+                    "max_amount": "1000000",
+                    "policy_id": "synthetic-policy-001",
+                    "required_finality": "observed_block",
+                    "required_routes": [
+                      "approved_gate",
+                      "direct_signer",
+                      "deployment_signer"
+                    ],
+                    "run_id": "synthetic-wallet-run-001",
+                    "valid_from": 1804722600,
+                    "valid_until": 1804723800,
+                    "version": "1",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "26d74a081ba4ffb0e62342093d9788ff82ba333b3b1d4c289545ffa32c7347c478e6e90ffc17f13f211984ca096ff6e91d07c08ac52c99e3bcbd79b4bd59e20e"
+                }
+              },
+              "operation": {
+                "action": "delegate",
+                "actor_id": "synthetic-developer-001",
+                "amount": "0",
+                "asset": "native",
+                "calldata": "0x",
+                "chain_id": "31337",
+                "credential_id": "synthetic-credential-001",
+                "delegation_target": "0x4444444444444444444444444444444444444444",
+                "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                "destination": "0x2222222222222222222222222222222222222222",
+                "nonce": "7",
+                "operation_id": "synthetic-operation-001",
+                "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                "signing_payload_digest": "sha256:270d180db2689beb5d9a0753eb4febfee690df2ceb6d51d892e426b71e336e75",
+                "wallet": "0x1111111111111111111111111111111111111111",
+                "workload_id": "synthetic-wallet-worker"
+              },
+              "run_id": "synthetic-wallet-run-001",
+              "schema": "experimental-wallet-authorization-bundle-v0",
+              "synthetic": true
+            },
+            "Case": "missing_approval"
+          }
+        },
+        "Security": {
+          "EventHash": "sha256:79625e95efc526d631ae4d75006851bdc136c082f192e8df8f3ab7b7b1367dab",
+          "HashAlgo": "SHA256",
+          "SignAlgo": "ED25519",
+          "Signature": "haD4U1ajM+kO1vrdy9qSGN692Rpec9Rn66tapUKD/7ffAYwPFQy3yos4mm9Lgp1irzbAdACmnMhJZQL906hVCQ==",
+          "Version": "1.1"
+        }
+      }
+    },
+    "stop_with_delegation": {
+      "evaluation_time": 1804723200,
+      "recorded_event": {
+        "Header": {
+          "ActorID": "wallet-demo:synthetic-recorder",
+          "ChainID": "wallet-demo:audit-stream",
+          "EventID": "01a431e2-a000-7f1f-9fbd-d60c3213024d",
+          "EventType": "SYS_AUDIT",
+          "PolicyID": "wallet-demo:research-only-v0",
+          "SequenceNum": 0,
+          "TimestampISO": "2027-03-11T00:00:00.000Z",
+          "TimestampInt": 1804723200000000000
+        },
+        "Payload": {
+          "ExperimentalWalletEvidence": {
+            "Bundle": {
+              "evidence": {
+                "approval": {
+                  "key_id": "synthetic-approval_authority",
+                  "payload": {
+                    "actor_id": "synthetic-developer-001",
+                    "approval_id": "synthetic-approval-001",
+                    "approver_id": "synthetic-approver-001",
+                    "credential_id": "synthetic-credential-001",
+                    "expires_at": 1804723320,
+                    "issued_at": 1804723170,
+                    "kind": "approval",
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "run_id": "synthetic-wallet-run-001"
+                  },
+                  "signature": "b403e2a05b6265d697c0ad67ae9e91a25011a74976336f0b7d0d1e0f89438cb4420a7e1428e41d61df5bdb5a067aea2430506a75ee5c5d0688ce798444b55d0f"
+                },
+                "chain_observation": {
+                  "key_id": "synthetic-chain_observer",
+                  "payload": {
+                    "block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "block_number": "100",
+                    "chain_id": "31337",
+                    "delegation_code": "0xef01004444444444444444444444444444444444444444",
+                    "execution_digest": "sha256:00d3ec5938c92edede6f8513ee19cd02fe74af72221e11b66fa97287a4e2f06d",
+                    "finality": "observed_block",
+                    "kind": "chain_observation",
+                    "observed_at": 1804723199,
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "receipt_status": "missing",
+                    "run_id": "synthetic-wallet-run-001",
+                    "transaction_block_hash": null,
+                    "transaction_block_number": null,
+                    "transaction_hash": null,
+                    "wallet": "0x1111111111111111111111111111111111111111"
+                  },
+                  "signature": "8dd865b22590e62cb7aaf5ab5965e297411f3136ee50cde3183d067178c56a7ff919bd37d6ec9dd78760ca1aca39916de284b19a05310ad0dc4931afc1bc3c02"
+                },
+                "control_observation": {
+                  "key_id": "synthetic-control_observer",
+                  "payload": {
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "control_observation",
+                    "observation_boundary": "synthetic named routes; privileged controller outside trust",
+                    "observed_at": 1804723197,
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "routes": {
+                      "approved_gate": "recorded",
+                      "deployment_signer": "blocked",
+                      "direct_signer": "blocked"
+                    },
+                    "run_id": "synthetic-wallet-run-001",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "65ba1df25319f867e938aa400de049fd9eb8937e34448d04021400ab977eced3c3bfe7f50a4853f8bb00d1d32be0507bfaf91a44148698fa58b5ed307f1cd200"
+                },
+                "execution": {
+                  "key_id": "synthetic-execution_observer",
+                  "payload": {
+                    "actual_operation": {
+                      "action": "clear_delegation",
+                      "actor_id": "synthetic-developer-001",
+                      "amount": "0",
+                      "asset": "native",
+                      "calldata": "0x",
+                      "chain_id": "31337",
+                      "credential_id": "synthetic-credential-001",
+                      "delegation_target": "0x0000000000000000000000000000000000000000",
+                      "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                      "destination": "0x2222222222222222222222222222222222222222",
+                      "nonce": "7",
+                      "operation_id": "synthetic-operation-001",
+                      "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                      "signing_payload_digest": "sha256:c189045ff85a5cf45b634289658ac53b1666d77730c2e950532d4f3b0872b406",
+                      "wallet": "0x1111111111111111111111111111111111111111",
+                      "workload_id": "synthetic-wallet-worker"
+                    },
+                    "approval_digest": "sha256:0b01b4c655e37ef8180d804e0091688c1a3d05e622143225f587e6219fa19255",
+                    "control_digest": "sha256:ca9928891e848213dfe5c537d4e991fb30be1b6da210fb0df04f8011c31d8d2c",
+                    "kind": "execution",
+                    "observed_at": 1804723198,
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revocation_digest": "sha256:327f638b221e13014c6450379addeb3b551588414096dfbaa8fcdbba6d3ecf3d",
+                    "run_id": "synthetic-wallet-run-001",
+                    "signing_payload": "0x7b22646f6d61696e223a2273796e7468657469632d77616c6c65742d696e74656e742d7630222c226f7065726174696f6e223a7b22616374696f6e223a22636c6561725f64656c65676174696f6e222c226163746f725f6964223a2273796e7468657469632d646576656c6f7065722d303031222c22616d6f756e74223a2230222c226173736574223a226e6174697665222c2263616c6c64617461223a223078222c22636861696e5f6964223a223331333337222c2263726564656e7469616c5f6964223a2273796e7468657469632d63726564656e7469616c2d303031222c2264656c65676174696f6e5f746172676574223a22307830303030303030303030303030303030303030303030303030303030303030303030303030303030222c226465706c6f796d656e745f646967657374223a227368613235363a32326564653436623637336333653138663265346461373064333937643037663339313237636561666534306431306338633530653763303030366331393033222c2264657374696e6174696f6e223a22307832323232323232323232323232323232323232323232323232323232323232323232323232323232222c226e6f6e6365223a2237222c226f7065726174696f6e5f6964223a2273796e7468657469632d6f7065726174696f6e2d303031222c22706f6c6963795f646967657374223a227368613235363a32353439663331356330326666663938663637333739373131613062373331643034363434623035343061613837303738623730376338616162303562376261222c2277616c6c6574223a22307831313131313131313131313131313131313131313131313131313131313131313131313131313131222c22776f726b6c6f61645f6964223a2273796e7468657469632d77616c6c65742d776f726b6572227d7d",
+                    "state": "offchain_stopped"
+                  },
+                  "signature": "604e45ce3f95c1d33c304349bdd9fc45249884a73a1e50ab185570bf25d0e00e0f4325877e686cd04edd459955bb8bf22027a67f62a2fe6da0db281c2523ad00"
+                },
+                "final_revocation": {
+                  "key_id": "synthetic-revocation_authority",
+                  "payload": {
+                    "approval_digest": "sha256:0b01b4c655e37ef8180d804e0091688c1a3d05e622143225f587e6219fa19255",
+                    "checked_at": 1804723197,
+                    "kind": "final_revocation",
+                    "operation_digest": "sha256:dad57bd8136fd36b1f4d0caffce90759049148204e914352631b094478b3a65d",
+                    "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                    "revoked_approvals": [],
+                    "revoked_credentials": [],
+                    "run_id": "synthetic-wallet-run-001",
+                    "snapshot_id": "synthetic-snapshot-001",
+                    "valid_until": 1804723230
+                  },
+                  "signature": "46dc4a2644ff24a37b8c58133a8b4049e75470aa7beffa0ab39628e65ce7fd897446b3632af738915cc47dca9ee5dbcc9f8865d1ae69b564f9eeb1093493d00a"
+                },
+                "policy": {
+                  "key_id": "synthetic-policy_authority",
+                  "payload": {
+                    "actor_id": "synthetic-developer-001",
+                    "allowed_actions": [
+                      "transfer",
+                      "delegate",
+                      "clear_delegation"
+                    ],
+                    "allowed_assets": [
+                      "native"
+                    ],
+                    "allowed_chains": [
+                      "31337"
+                    ],
+                    "allowed_delegation_targets": [
+                      "0x4444444444444444444444444444444444444444",
+                      "0x0000000000000000000000000000000000000000"
+                    ],
+                    "allowed_destinations": [
+                      "0x2222222222222222222222222222222222222222",
+                      "0x3333333333333333333333333333333333333333"
+                    ],
+                    "allowed_wallets": [
+                      "0x1111111111111111111111111111111111111111"
+                    ],
+                    "credential_id": "synthetic-credential-001",
+                    "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                    "kind": "policy",
+                    "max_amount": "1000000",
+                    "policy_id": "synthetic-policy-001",
+                    "required_finality": "observed_block",
+                    "required_routes": [
+                      "approved_gate",
+                      "direct_signer",
+                      "deployment_signer"
+                    ],
+                    "run_id": "synthetic-wallet-run-001",
+                    "valid_from": 1804722600,
+                    "valid_until": 1804723800,
+                    "version": "1",
+                    "workload_id": "synthetic-wallet-worker"
+                  },
+                  "signature": "26d74a081ba4ffb0e62342093d9788ff82ba333b3b1d4c289545ffa32c7347c478e6e90ffc17f13f211984ca096ff6e91d07c08ac52c99e3bcbd79b4bd59e20e"
+                }
+              },
+              "operation": {
+                "action": "clear_delegation",
+                "actor_id": "synthetic-developer-001",
+                "amount": "0",
+                "asset": "native",
+                "calldata": "0x",
+                "chain_id": "31337",
+                "credential_id": "synthetic-credential-001",
+                "delegation_target": "0x0000000000000000000000000000000000000000",
+                "deployment_digest": "sha256:22ede46b673c3e18f2e4da70d397d07f39127ceafe40d10c8c50e7c0006c1903",
+                "destination": "0x2222222222222222222222222222222222222222",
+                "nonce": "7",
+                "operation_id": "synthetic-operation-001",
+                "policy_digest": "sha256:2549f315c02fff98f67379711a0b731d04644b0540aa87078b707c8aab05b7ba",
+                "signing_payload_digest": "sha256:c189045ff85a5cf45b634289658ac53b1666d77730c2e950532d4f3b0872b406",
+                "wallet": "0x1111111111111111111111111111111111111111",
+                "workload_id": "synthetic-wallet-worker"
+              },
+              "run_id": "synthetic-wallet-run-001",
+              "schema": "experimental-wallet-authorization-bundle-v0",
+              "synthetic": true
+            },
+            "Case": "stop_with_delegation"
+          }
+        },
+        "Security": {
+          "EventHash": "sha256:5a1435207470a958ddb1e5636061fbc6b9fc6d211f89b660c5b1d847e015b85f",
+          "HashAlgo": "SHA256",
+          "SignAlgo": "ED25519",
+          "Signature": "Kv/UOVGOIa/tv5u8+g1ByiuGStCHFECowYDeSSNOOQ46cRjukZnobl9ZNRBQitsaCxrE6zUY/pMMkzITc3JmBg==",
+          "Version": "1.1"
+        }
+      }
+    }
+  },
+  "provenance": {
+    "companion_result_schema": "experimental-wallet-authorization-evidence-v0",
+    "companion_source_commit": "45658b4ee75f1a9e96b2df5b0a693b2d90b548a2",
+    "companion_source_files": {
+      "fixtures.py": "sha256:7a4db30204c5c0c8924fac1c4531ceffcfae1dd0251d3f2c5173bff29c41648e",
+      "wallet_evidence.py": "sha256:6ad93ea27fc49951f00f327a68186c4849e3f51a5aff5e43538168cbd2e2e746"
+    },
+    "generator": "examples/wallet-authorization-demo/generate_fixtures.py",
+    "kind": "synthetic, first-party, deterministic test evidence",
+    "private_keys": "Public synthetic seeds in fixture generators; never production keys.",
+    "sdk_base_commit": "8979696800835cb239d47502c1e2c6858dd312c8"
+  },
+  "schema": "vcp-wallet-authorization-demo-fixtures/1"
+}

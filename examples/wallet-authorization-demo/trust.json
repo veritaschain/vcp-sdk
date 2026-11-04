@@ -1,0 +1,97 @@
+{
+  "cases": {
+    "approval_mismatch": {
+      "companion_keys": {
+        "approval_authority": {
+          "synthetic-approval_authority": "286573e9e6ab0fcc0861afb23177251699ca8b210839e3365330018d48a2d678"
+        },
+        "chain_observer": {
+          "synthetic-chain_observer": "03f21a2f995ddf8292ec1f4203487e9d45b15098644ad328526cdc6cec46bc7a"
+        },
+        "control_observer": {
+          "synthetic-control_observer": "a869b66e468d452f186b27514fd238d9e7463adf6cda1789fac5db83c785fdfb"
+        },
+        "execution_observer": {
+          "synthetic-execution_observer": "7c83cd39227a036c642973f5168351bd499e4f73b667b359a68699c7daed90e7"
+        },
+        "policy_authority": {
+          "synthetic-policy_authority": "343e56d73f02e68f44d00939243a1e2dad3351508a36c46dad104244f800305e"
+        },
+        "revocation_authority": {
+          "synthetic-revocation_authority": "383fe45018c1cc2e5168cb3f4375c555b98525b58f00546a219feb6c170a7cde"
+        }
+      }
+    },
+    "clear_observed": {
+      "companion_keys": {
+        "approval_authority": {
+          "synthetic-approval_authority": "286573e9e6ab0fcc0861afb23177251699ca8b210839e3365330018d48a2d678"
+        },
+        "chain_observer": {
+          "synthetic-chain_observer": "03f21a2f995ddf8292ec1f4203487e9d45b15098644ad328526cdc6cec46bc7a"
+        },
+        "control_observer": {
+          "synthetic-control_observer": "a869b66e468d452f186b27514fd238d9e7463adf6cda1789fac5db83c785fdfb"
+        },
+        "execution_observer": {
+          "synthetic-execution_observer": "7c83cd39227a036c642973f5168351bd499e4f73b667b359a68699c7daed90e7"
+        },
+        "policy_authority": {
+          "synthetic-policy_authority": "343e56d73f02e68f44d00939243a1e2dad3351508a36c46dad104244f800305e"
+        },
+        "revocation_authority": {
+          "synthetic-revocation_authority": "383fe45018c1cc2e5168cb3f4375c555b98525b58f00546a219feb6c170a7cde"
+        }
+      }
+    },
+    "missing_approval": {
+      "companion_keys": {
+        "approval_authority": {
+          "synthetic-approval_authority": "286573e9e6ab0fcc0861afb23177251699ca8b210839e3365330018d48a2d678"
+        },
+        "chain_observer": {
+          "synthetic-chain_observer": "03f21a2f995ddf8292ec1f4203487e9d45b15098644ad328526cdc6cec46bc7a"
+        },
+        "control_observer": {
+          "synthetic-control_observer": "a869b66e468d452f186b27514fd238d9e7463adf6cda1789fac5db83c785fdfb"
+        },
+        "execution_observer": {
+          "synthetic-execution_observer": "7c83cd39227a036c642973f5168351bd499e4f73b667b359a68699c7daed90e7"
+        },
+        "policy_authority": {
+          "synthetic-policy_authority": "343e56d73f02e68f44d00939243a1e2dad3351508a36c46dad104244f800305e"
+        },
+        "revocation_authority": {
+          "synthetic-revocation_authority": "383fe45018c1cc2e5168cb3f4375c555b98525b58f00546a219feb6c170a7cde"
+        }
+      }
+    },
+    "stop_with_delegation": {
+      "companion_keys": {
+        "approval_authority": {
+          "synthetic-approval_authority": "286573e9e6ab0fcc0861afb23177251699ca8b210839e3365330018d48a2d678"
+        },
+        "chain_observer": {
+          "synthetic-chain_observer": "03f21a2f995ddf8292ec1f4203487e9d45b15098644ad328526cdc6cec46bc7a"
+        },
+        "control_observer": {
+          "synthetic-control_observer": "a869b66e468d452f186b27514fd238d9e7463adf6cda1789fac5db83c785fdfb"
+        },
+        "execution_observer": {
+          "synthetic-execution_observer": "7c83cd39227a036c642973f5168351bd499e4f73b667b359a68699c7daed90e7"
+        },
+        "policy_authority": {
+          "synthetic-policy_authority": "343e56d73f02e68f44d00939243a1e2dad3351508a36c46dad104244f800305e"
+        },
+        "revocation_authority": {
+          "synthetic-revocation_authority": "383fe45018c1cc2e5168cb3f4375c555b98525b58f00546a219feb6c170a7cde"
+        }
+      }
+    }
+  },
+  "schema": "vcp-wallet-authorization-demo-trust/1",
+  "sdk_recorder": {
+    "actor_id": "wallet-demo:synthetic-recorder",
+    "public_key_hex": "f3bfe4db2b0ec484459a9f5c988aa234dbbdfbd47a01ae8ea43d85a2b4078a8e"
+  }
+}
