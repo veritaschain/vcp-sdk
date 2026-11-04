@@ -45,12 +45,12 @@ To also run the canonical wallet evidence verifier, obtain a **local** checkout
 of [`veritaschain/vap-spec`](https://github.com/veritaschain/vap-spec) containing
 `experiments/wallet-authorization-evidence/`, with source bytes matching
 [`companion-lock.json`](companion-lock.json). This example pins the immutable
-[source commit `45658b4ee75f1a9e96b2df5b0a693b2d90b548a2`](https://github.com/veritaschain/vap-spec/tree/45658b4ee75f1a9e96b2df5b0a693b2d90b548a2/experiments/wallet-authorization-evidence),
+[source commit `7bdec510e3ed1f15a8362d30516acd7b161b9987`](https://github.com/veritaschain/vap-spec/tree/7bdec510e3ed1f15a8362d30516acd7b161b9987/experiments/wallet-authorization-evidence),
 not a moving branch. For a new sibling checkout:
 
 ```sh
 git clone --no-checkout https://github.com/veritaschain/vap-spec.git ../vap-spec
-git -C ../vap-spec checkout --detach 45658b4ee75f1a9e96b2df5b0a693b2d90b548a2
+git -C ../vap-spec checkout --detach 7bdec510e3ed1f15a8362d30516acd7b161b9987
 ```
 
 Then run:
