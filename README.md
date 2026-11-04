@@ -2,7 +2,7 @@
 
 [日本語](README.ja.md)
 
-**Version 0.1.0 — pre-release.** Python, TypeScript and MQL5 libraries for
+**Development source — package version 0.1.0 (pre-release).** Python, TypeScript and MQL5 libraries for
 producing and verifying [VeritasChain Protocol (VCP) v1.2](https://github.com/veritaschain/vcp-spec/tree/v1.2.0/spec/v1.2)
 events offline: canonical hashing, Merkle trees, Ed25519 signatures and
 verification with three-valued results.
@@ -97,21 +97,35 @@ the full batch remains INDETERMINATE because no external anchor proof is supplie
 
 ## Install
 
-Python 3.10+:
+The commands below pin the reviewed development snapshot
+[`8eadded87e4f4e46d011835b2ba9a874b91c916d`](https://github.com/veritaschain/vcp-sdk/commit/8eadded87e4f4e46d011835b2ba9a874b91c916d).
+It includes the later replay-input, Merkle-proof input and installer-integrity
+fixes. Package metadata still reports `0.1.0`; identify this snapshot by its
+commit SHA. This is not a new tagged release.
+
+The historical [`v0.1.0` tag](https://github.com/veritaschain/vcp-sdk/tree/v0.1.0)
+from 2026-10-25 is unchanged and does **not** include those fixes. Use the pinned
+development snapshot below for current evaluation.
+
+Python 3.10+ and Git (`--force-reinstall` also replaces an existing `0.1.0` install):
 
 ```bash
-pip install "git+https://github.com/veritaschain/vcp-sdk.git@v0.1.0#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@8eadded87e4f4e46d011835b2ba9a874b91c916d#subdirectory=python"
 ```
 
 TypeScript (Node 20+, or a browser bundler):
 
 ```bash
-git clone --branch v0.1.0 https://github.com/veritaschain/vcp-sdk.git
-cd vcp-sdk/typescript && npm ci && npm run build
+git clone https://github.com/veritaschain/vcp-sdk.git
+cd vcp-sdk
+git checkout --detach 8eadded87e4f4e46d011835b2ba9a874b91c916d
+cd typescript
+npm ci
+npm run build
 # then in your project:  npm install /path/to/vcp-sdk/typescript
 ```
 
-MQL5: copy `mql5/Include/VeritasChain` to `MQL5/Include/`, and the scripts and
+MQL5: from the same pinned checkout, copy `mql5/Include/VeritasChain` to `MQL5/Include/`, and the scripts and
 experts you want to `MQL5/Scripts/` and `MQL5/Experts/`. See [mql5/README.md](mql5/README.md).
 
 ## Quick start (Python)
