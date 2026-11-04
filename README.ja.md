@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-**バージョン 0.1.0(プレリリース)。** [VeritasChain Protocol(VCP)v1.2](https://github.com/veritaschain/vcp-spec/tree/v1.2.0/spec/v1.2)
+**開発版ソース（パッケージバージョン 0.1.0、プレリリース）。** [VeritasChain Protocol(VCP)v1.2](https://github.com/veritaschain/vcp-spec/tree/v1.2.0/spec/v1.2)
 のイベントをオフラインで作成・検証するための、Python・TypeScript・MQL5 のライブラリです。
 正規化してのハッシュ計算、Merkle 木、Ed25519 署名、三値の結果を返す検証を扱います。
 
@@ -79,21 +79,34 @@ SDK が実行しない検査を VALID と報告することはありません。
 
 ## インストール
 
-Python 3.10 以上:
+以下の手順は、レビュー済みの開発版ソース
+[`8eadded87e4f4e46d011835b2ba9a874b91c916d`](https://github.com/veritaschain/vcp-sdk/commit/8eadded87e4f4e46d011835b2ba9a874b91c916d)
+を固定して取得します。リプレイ入力、Merkle 証明の入力、インストーラーの完全性検証に関する
+後続修正を含みます。パッケージのバージョン表示は `0.1.0` のままなので、
+このソースはコミット SHA で識別してください。新しいタグ付きリリースではありません。
+
+2026-10-25 の履歴用 [`v0.1.0` タグ](https://github.com/veritaschain/vcp-sdk/tree/v0.1.0) は
+変更しておらず、これらの修正を**含みません**。現在の評価には以下の固定した開発版を使用してください。
+
+Python 3.10 以上と Git（`--force-reinstall` により、導入済みの `0.1.0` も置き換えます）:
 
 ```bash
-pip install "git+https://github.com/veritaschain/vcp-sdk.git@v0.1.0#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@8eadded87e4f4e46d011835b2ba9a874b91c916d#subdirectory=python"
 ```
 
 TypeScript(Node 20 以上、またはブラウザ向けバンドラ):
 
 ```bash
-git clone --branch v0.1.0 https://github.com/veritaschain/vcp-sdk.git
-cd vcp-sdk/typescript && npm ci && npm run build
+git clone https://github.com/veritaschain/vcp-sdk.git
+cd vcp-sdk
+git checkout --detach 8eadded87e4f4e46d011835b2ba9a874b91c916d
+cd typescript
+npm ci
+npm run build
 # 利用側のプロジェクトで:  npm install /path/to/vcp-sdk/typescript
 ```
 
-MQL5:`mql5/Include/VeritasChain` を `MQL5/Include/` に、必要なスクリプトとエキスパートを
+MQL5:同じコミットに固定したチェックアウトから、`mql5/Include/VeritasChain` を `MQL5/Include/` に、必要なスクリプトとエキスパートを
 `MQL5/Scripts/`・`MQL5/Experts/` にコピーします。[mql5/README.md](mql5/README.md) を参照してください。
 
 ## 使い方
