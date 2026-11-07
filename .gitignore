@@ -6,3 +6,6 @@ __pycache__/
 .venv/
 *.ex5
 .mt5/
+
+# Local AI-agent permission records may contain credentials in command arguments.
+**/.claude/settings.local.json
