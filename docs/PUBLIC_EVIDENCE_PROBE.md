@@ -68,7 +68,7 @@ runner, not authenticated timestamp receipts.
 
 The `Public evidence API probe` workflow runs on relevant internal PRs/main
 changes and manual dispatch; it has **no scheduled recurrence**. It tests
-Ubuntu 24.04 and macOS 14 runners and retains artifacts for 30 days. Both are
+Ubuntu 24.04 and macOS 15 runners and retains artifacts for 30 days. Both are
 GitHub-hosted environments, **not two independent operators** or independent
 third-party implementations. Success does not prove universal reachability,
 a stable service commitment, or current browser GUI operation.
