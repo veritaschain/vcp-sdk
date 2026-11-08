@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           path: sdk
           persist-credentials: false
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: veritaschain/vcp-explorer-api
           ref: c3d67ab2467a55e017f652b38a2b89c3f4a7cee7
           path: api
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
       - name: Build SDK and compare actual portable API checks
@@ -40,7 +40,7 @@ jobs:
           git rev-parse HEAD > reproduction/SOURCE_COMMIT.txt
           printf '%s\n' 'API c3d67ab2467a55e017f652b38a2b89c3f4a7cee7' > reproduction/API_COMMIT.txt
           sha256sum reproduction/sdk-source.zip > reproduction/SHA256SUMS.txt
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: replay-source-${{ github.sha }}
           path: sdk/reproduction/
