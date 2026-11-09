@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+These entries describe development after the unchanged `v0.1.0` prerelease tag
+(`cc6c4689c312662dcd9157f3270e6ed8f2c509cb`). Package metadata still says
+`0.1.0`; use a full source commit to identify an installation. The README's
+fixed install snapshot is `8eadded87e4f4e46d011835b2ba9a874b91c916d`;
+later wallet examples and CI changes require their own later source revision.
+
+* Merkle proof-generation input correction ([PR #10](https://github.com/veritaschain/vcp-sdk/pull/10)):
+  Python rejects non-integer leaf positions and first-tree sizes, including
+  booleans; TypeScript requires safe-integer numbers. Checks occur before tree
+  recursion. Existing range checks and valid integer proof construction remain.
+* Added interoperability boundary vectors and Python/TypeScript checks, an
+  offline Explorer evidence replay CLI, fail-closed handling of malformed replay
+  inputs, and bounded public-endpoint probes. These remain first-party checks;
+  an unavailable endpoint is not a successful verification result.
+* Added the optional [wallet authorization evidence demo](examples/wallet-authorization-demo/README.md)
+  and pinned its companion verifier to the signed-tuple correction. It separates
+  SDK record integrity from authorization evidence; unavailable companion
+  evidence remains INDETERMINATE. It does not change the SDK verification API.
+* Added ignore rules and a CI guard for accidentally tracked local agent
+  permission records ([PR #14](https://github.com/veritaschain/vcp-sdk/pull/14)).
+  Later CI moved to pinned Node 24 Actions and the macOS 15 probe runner
+  ([PR #15](https://github.com/veritaschain/vcp-sdk/pull/15)).
+* Documentation correction (2026-11-10): describe the UUID check as an ASCII
+  hexadecimal shape check without version/variant validation, and distinguish
+  package metadata from the source revision. No schema or verifier behavior
+  changes, new release or retagging are part of this correction.
+
 * CI integrity correction (2026-11-02): pin the existing GitHub Actions major
   versions to verified official tag SHAs and disable checkout credential
   persistence. MQL5 bootstrap now requires a reviewed SHA-256 and successful

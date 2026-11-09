@@ -207,9 +207,13 @@ exactly the RFC 8785 output.
   note. A `HashAlgo` (or any other optional Security field) that is present but
   not a string, including `null`, is `INVALID` (`BAD_FORMAT`).
 * `EventType` must be one of the 27 values in the v1.2 event schema; any other
-  value is `INVALID` (`UNKNOWN_EVENT_TYPE`). `EventID` must be a UUID; its
-  version is not checked (the schema accepts any RFC 9562 UUID; UUIDv7 is
-  required only at Gold and Platinum).
+  value is `INVALID` (`UNKNOWN_EVENT_TYPE`). `EventID`, and `TraceID` when
+  supplied, must match the ASCII hexadecimal `8-4-4-4-12` shape used by the
+  schema's UUID pattern. Neither the pattern nor the SDK's format check validates
+  UUID version or variant bits. Matching this shape does not establish RFC 9562
+  conformance or the specification's Gold/Platinum UUIDv7 requirement. The copied
+  schema's comment about accepting any RFC 9562 UUID is broader than this
+  implemented check; the comment does not add version or variant validation.
 * `AnchorTarget.Type` outside `BLOCKCHAIN`, `TSA`, `DATABASE`, `PUBLIC_SERVICE`,
   or a `Proof` that is present but not a string, is `INVALID`. An empty or absent
   `Proof` is `INDETERMINATE` (`MISSING_ANCHOR_PROOF`).

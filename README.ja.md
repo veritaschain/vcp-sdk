@@ -2,9 +2,15 @@
 
 [English](README.md)
 
-**開発版ソース（パッケージバージョン 0.1.0、プレリリース）。** [VeritasChain Protocol(VCP)v1.2](https://github.com/veritaschain/vcp-spec/tree/v1.2.0/spec/v1.2)
+**未リリースの開発版ソース（パッケージのバージョン表示は 0.1.0 のまま）。** [VeritasChain Protocol(VCP)v1.2](https://github.com/veritaschain/vcp-spec/tree/v1.2.0/spec/v1.2)
 のイベントをオフラインで作成・検証するための、Python・TypeScript・MQL5 のライブラリです。
 正規化してのハッシュ計算、Merkle 木、Ed25519 署名、三値の結果を返す検証を扱います。
+
+導入環境や検証結果を報告する際は、ソースの完全なコミット SHA を記録してください。
+`0.1.0` だけでは、履歴用のプレリリースタグと後続の開発版を区別できません。
+導入手順では固定した開発版のコミットを示し、[CHANGELOG.md](CHANGELOG.md)では
+タグ以降の変更を区別しています。`main` に後から追加されたサンプルや CI の変更が、
+導入手順の固定コミットに含まれるとは限りません。
 
 > **位置づけと開示**
 >

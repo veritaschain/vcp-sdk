@@ -2,10 +2,17 @@
 
 [日本語](README.ja.md)
 
-**Development source — package version 0.1.0 (pre-release).** Python, TypeScript and MQL5 libraries for
+**Unreleased development source — package metadata remains 0.1.0.** Python, TypeScript and MQL5 libraries for
 producing and verifying [VeritasChain Protocol (VCP) v1.2](https://github.com/veritaschain/vcp-spec/tree/v1.2.0/spec/v1.2)
 events offline: canonical hashing, Merkle trees, Ed25519 signatures and
 verification with three-valued results.
+
+Record the full source commit when reporting an installation or verification
+result: `0.1.0` alone does not distinguish the historical prerelease tag from
+later development revisions. The [installation section](#install) identifies
+the fixed development snapshot; [CHANGELOG.md](CHANGELOG.md) separates work
+after the tag. A later example or CI change on `main` is not automatically
+included in that installation snapshot.
 
 > **Status and disclosure**
 >
