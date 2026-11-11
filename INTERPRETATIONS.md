@@ -257,7 +257,7 @@ exactly the RFC 8785 output.
 
 Results are `VALID`, `INVALID` or `INDETERMINATE`, combined with the precedence
 INVALID > INDETERMINATE > VALID. The values follow the unadopted VSO discussion
-draft [`vap-spec/proposals/three-valued-verification`](https://github.com/veritaschain/vap-spec/blob/main/proposals/three-valued-verification/README.md)
-(revision 0.1). The reason codes (`HASH_MISMATCH`, `KEY_NOT_ESTABLISHED`,
+draft [`vap-spec/proposals/three-valued-verification`](https://github.com/veritaschain/vap-spec/blob/1ce71a66f55d9a20728213b7c3a8bb79270ae579/proposals/three-valued-verification/README.md)
+(revision 0.2, source checked 11 November 2026). The reason codes (`HASH_MISMATCH`, `KEY_NOT_ESTABLISHED`,
 `LEGACY_MERKLE_CONSTRUCTION` and so on) are this SDK's and are not registered
 identifiers. `INDETERMINATE` is not a pass.

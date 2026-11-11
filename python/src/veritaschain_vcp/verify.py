@@ -11,7 +11,7 @@ Every check returns ``VALID``, ``INVALID`` or ``INDETERMINATE``:
 
 Precedence when combining: ``INVALID`` > ``INDETERMINATE`` > ``VALID``.
 ``INDETERMINATE`` is not a pass. The values follow the unadopted VSO discussion
-draft ``vap-spec/proposals/three-valued-verification`` (revision 0.1); the
+draft ``vap-spec/proposals/three-valued-verification`` (revision 0.2); the
 reason codes are this SDK's and are not registered identifiers.
 
 A check that this module does not perform is not reported as VALID: either it is
