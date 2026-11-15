@@ -121,7 +121,30 @@ def cmd_verify_chain(args: argparse.Namespace) -> int:
     return _emit(verify_chain(_events(args.events), prior_hash=args.prior_hash))
 
 
+def _check_seal_paths(args: argparse.Namespace) -> None:
+    """Refuse ordinary aliases before signing or writing either output.
+
+    resolve() also compares not-yet-created destinations; samefile() detects
+    existing hard links. This is a preflight check, not a filesystem lock.
+    """
+    outputs = [("--out", Path(args.out)), ("--anchor-out", Path(args.anchor_out))]
+    inputs = [] if args.events == "-" else [("events", Path(args.events))]
+    if args.private_key_file and args.private_key_file != "-":
+        inputs.append(("--private-key-file", Path(args.private_key_file)))
+    for index, (label, path) in enumerate(outputs):
+        for other_label, other in outputs[index + 1:] + inputs:
+            same = path.resolve() == other.resolve()
+            if not same:
+                try:
+                    same = path.samefile(other)
+                except FileNotFoundError:
+                    pass
+            if same:
+                raise UsageError(f"{label} must be distinct from {other_label}")
+
+
 def cmd_seal(args: argparse.Namespace) -> int:
+    _check_seal_paths(args)
     key = _private_key(args)
     unsigned = _events(args.events)
     if not unsigned:
@@ -219,8 +242,8 @@ def main(argv: list[str] | None = None) -> int:
                    "otherwise VCP_PRIVATE_KEY is used")
     p.add_argument("--allow-missing-hash", action="store_true",
                    help="sign lines that carry no producer-written EventHash")
-    p.add_argument("--out", required=True)
-    p.add_argument("--anchor-out", required=True)
+    p.add_argument("--out", required=True, help="sealed events file, distinct from the input, key and anchor output")
+    p.add_argument("--anchor-out", required=True, help="anchor file, distinct from the input, key and events output")
     p.add_argument("--policy-id")
     p.add_argument("--anchor-reference")
     p.add_argument("--prev-hash", action="store_true", help="link events with PrevHash")

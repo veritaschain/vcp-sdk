@@ -180,6 +180,13 @@ the producer writes to. For a chain split across files, pass the previous file's
 `last_event_hash` (printed by `vcp seal`) as `--prior-hash`, and line 1 must
 link to it.
 
+The two `seal` outputs must be distinct from each other, the event input, and
+the private-key file. A collision (including a relative-path, symbolic-link,
+or existing hard-link alias) exits with 3 before either output is written.
+Existing distinct output files are still replaced. This path check detects
+ordinary file-selection mistakes; protect the working directory from
+concurrent file or link changes.
+
 ## Quick start (TypeScript)
 
 ```ts
