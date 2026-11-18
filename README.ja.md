@@ -86,9 +86,11 @@ SDK が実行しない検査を VALID と報告することはありません。
 ## インストール
 
 以下の手順は、レビュー済みの開発版ソース
-[`8eadded87e4f4e46d011835b2ba9a874b91c916d`](https://github.com/veritaschain/vcp-sdk/commit/8eadded87e4f4e46d011835b2ba9a874b91c916d)
-を固定して取得します。リプレイ入力、Merkle 証明の入力、インストーラーの完全性検証に関する
-後続修正を含みます。パッケージのバージョン表示は `0.1.0` のままなので、
+[`0832f1d84af9b130db6a17d36c343a8abd7002a8`](https://github.com/veritaschain/vcp-sdk/commit/0832f1d84af9b130db6a17d36c343a8abd7002a8)
+を固定して取得します。リプレイ入力・Merkle 証明の入力・インストーラーの完全性検証の修正に加え、
+[PR #18](https://github.com/veritaschain/vcp-sdk/pull/18) の `vcp seal` のパス衝突チェックを含みます。
+以前の導入版 `8eadded87` にはこのチェックがないため、`vcp seal` を使う前に上記のコミットから再インストールしてください。
+パッケージのバージョン表示は `0.1.0` のままなので、
 このソースはコミット SHA で識別してください。新しいタグ付きリリースではありません。
 
 2026-10-25 の履歴用 [`v0.1.0` タグ](https://github.com/veritaschain/vcp-sdk/tree/v0.1.0) は
@@ -97,7 +99,7 @@ SDK が実行しない検査を VALID と報告することはありません。
 Python 3.10 以上と Git（`--force-reinstall` により、導入済みの `0.1.0` も置き換えます）:
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@8eadded87e4f4e46d011835b2ba9a874b91c916d#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@0832f1d84af9b130db6a17d36c343a8abd7002a8#subdirectory=python"
 ```
 
 TypeScript(Node 20 以上、またはブラウザ向けバンドラ):
@@ -105,7 +107,7 @@ TypeScript(Node 20 以上、またはブラウザ向けバンドラ):
 ```bash
 git clone https://github.com/veritaschain/vcp-sdk.git
 cd vcp-sdk
-git checkout --detach 8eadded87e4f4e46d011835b2ba9a874b91c916d
+git checkout --detach 0832f1d84af9b130db6a17d36c343a8abd7002a8
 cd typescript
 npm ci
 npm run build
@@ -140,6 +142,11 @@ vcp seal unsigned.jsonl --private-key-file ea.key --out events.jsonl --anchor-ou
 すべて署名するため、作成側が書き込むフォルダは保護してください。連鎖が複数のファイルに分かれる場合は、
 前のファイルを `vcp seal` したときに表示される `last_event_hash` を `--prior-hash` に渡します。
 1行目がそれにつながっていなければ署名しません。
+
+2つの出力先は互いに別のファイルを指定し、入力証跡や秘密鍵のファイルも出力先にしないでください。
+同じファイルを指す指定（相対パス、シンボリックリンク、既存のハードリンクを含む）は、
+どちらにも書き込む前に終了コード3で拒否します。別ファイルとして指定した既存の出力先は上書きされます。
+同時実行によるパス変更は防げないため、作業ディレクトリを保護してください。
 
 TypeScript では、イベントの JSON を `JSON.parse` ではなく `parseJson`・`parseJsonLines` で読んでください。
 `JSON.parse` はナノ秒のタイムスタンプを丸めます。書き出しには `toJson` を使います。

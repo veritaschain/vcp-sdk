@@ -105,9 +105,11 @@ the full batch remains INDETERMINATE because no external anchor proof is supplie
 ## Install
 
 The commands below pin the reviewed development snapshot
-[`8eadded87e4f4e46d011835b2ba9a874b91c916d`](https://github.com/veritaschain/vcp-sdk/commit/8eadded87e4f4e46d011835b2ba9a874b91c916d).
-It includes the later replay-input, Merkle-proof input and installer-integrity
-fixes. Package metadata still reports `0.1.0`; identify this snapshot by its
+[`0832f1d84af9b130db6a17d36c343a8abd7002a8`](https://github.com/veritaschain/vcp-sdk/commit/0832f1d84af9b130db6a17d36c343a8abd7002a8).
+It includes the replay-input, Merkle-proof input and installer-integrity fixes,
+plus the `vcp seal` path checks from [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18).
+The earlier installation snapshot (`8eadded87`) lacks these path checks;
+reinstall from the commit above before using `vcp seal`. Package metadata still reports `0.1.0`; identify this snapshot by its
 commit SHA. This is not a new tagged release.
 
 The historical [`v0.1.0` tag](https://github.com/veritaschain/vcp-sdk/tree/v0.1.0)
@@ -117,7 +119,7 @@ development snapshot below for current evaluation.
 Python 3.10+ and Git (`--force-reinstall` also replaces an existing `0.1.0` install):
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@8eadded87e4f4e46d011835b2ba9a874b91c916d#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@0832f1d84af9b130db6a17d36c343a8abd7002a8#subdirectory=python"
 ```
 
 TypeScript (Node 20+, or a browser bundler):
@@ -125,7 +127,7 @@ TypeScript (Node 20+, or a browser bundler):
 ```bash
 git clone https://github.com/veritaschain/vcp-sdk.git
 cd vcp-sdk
-git checkout --detach 8eadded87e4f4e46d011835b2ba9a874b91c916d
+git checkout --detach 0832f1d84af9b130db6a17d36c343a8abd7002a8
 cd typescript
 npm ci
 npm run build
