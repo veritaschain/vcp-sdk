@@ -23,7 +23,9 @@ permissions:
 jobs:
   compile-and-selftest:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    # Dependencies and compilation have separate bounds, so a stalled download
+    # cannot consume the full compile/self-test budget without an identifiable step.
+    timeout-minutes: 80
     steps:
       - name: Keep compilation unverified during installer review
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'installer-review' }}
@@ -38,15 +40,34 @@ jobs:
           MT5_SETUP_SHA256: ${{ vars.MT5_SETUP_SHA256 }}
         run: |
           [[ "$MT5_SETUP_SHA256" =~ ^[0-9a-fA-F]{64}$ ]] || { echo "Set reviewed MT5_SETUP_SHA256; see tools/mql5/INSTALLER_REVIEW.md" >&2; exit 3; }
-      - name: Install Wine (WineHQ staging), Xvfb and osslsigncode
+      - name: Configure the WineHQ repository
+        timeout-minutes: 3
         run: |
           sudo dpkg --add-architecture i386
           sudo mkdir -pm755 /etc/apt/keyrings
-          sudo wget -qO /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo wget -qNP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
-          sudo apt-get update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --install-recommends winehq-staging xvfb osslsigncode
+          echo 'Downloading the WineHQ repository signing key'
+          sudo curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+            --connect-timeout 15 --max-time 30 --retry 2 --retry-delay 2 --retry-max-time 60 \
+            --output /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          echo 'Downloading the Ubuntu 24.04 WineHQ source definition'
+          sudo curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+            --connect-timeout 15 --max-time 30 --retry 2 --retry-delay 2 --retry-max-time 60 \
+            --output /etc/apt/sources.list.d/winehq-noble.sources https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+      - name: Refresh package indexes
+        timeout-minutes: 3
+        run: |
+          sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 \
+            -o Acquire::https::Timeout=30 -o DPkg::Lock::Timeout=60 update
+      - name: Install Wine (WineHQ staging), Xvfb and osslsigncode
+        timeout-minutes: 25
+        run: |
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=2 \
+            -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 \
+            -o DPkg::Lock::Timeout=60 install -y --install-recommends winehq-staging xvfb osslsigncode
+          wine --version
+          osslsigncode --version
       - name: Compile with MetaEditor and run the self-test
+        timeout-minutes: 40
         env:
           MT5_SETUP_SHA256: ${{ vars.MT5_SETUP_SHA256 }}
         run: tools/mql5/compile-and-selftest.sh

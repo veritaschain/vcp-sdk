@@ -35,8 +35,10 @@ SETUP="$WORK/dl/mt5setup.exe"
 mkdir -p "$WORK/dl"
 if [ ! -f "$SETUP" ]; then
   # This URL is linked by https://www.metatrader5.com/en/download.
+  echo "Downloading the MetaTrader installer (bounded connection and transfer time)"
   if ! curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
-      --tlsv1.2 --output "$SETUP" \
+      --tlsv1.2 --connect-timeout 30 --max-time 180 --retry 2 --retry-delay 2 --retry-max-time 240 \
+      --output "$SETUP" \
       'https://download.terminal.free/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_campaign=download&utm_source=www.metatrader5.com'; then
     echo "MetaTrader installer download failed; nothing will be executed" >&2
     exit 3
