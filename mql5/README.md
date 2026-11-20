@@ -36,7 +36,7 @@ python -m unittest discover -s tools/mql5 -p 'test_*.py' -v
 
 The CI job reports WineHQ repository configuration, package-index refresh,
 dependency installation, and compilation/self-test as separate steps. They have
-3-, 3-, 12-, and 40-minute limits within a 60-minute job. Repository downloads,
+3-, 3-, 25-, and 40-minute limits within an 80-minute job. Repository downloads,
 package acquisition, and the official installer download also have bounded
 network waits and retries. A setup timeout or download failure leaves compilation
 unverified; it does not count as a passing compiler or terminal self-test.
