@@ -1,14 +1,32 @@
 /** Actual pinned API source + actual SDK, no HTTP mocks. First-party parity only. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import ts from 'typescript';
+import { execFileSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as sdk from '../dist/index.js';
 import { replay } from '../../tools/replay_explorer_demo.mjs';
-assert.ok(process.env.VCP_EVIDENCE_API_CORE, 'Use the reviewed API core path');
-const source = readFileSync(process.env.VCP_EVIDENCE_API_CORE, 'utf8');
-const compiled = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } });
-const { createEvidenceDemo } = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputText).toString('base64'));
+
+async function loadApiCore(sourcePath) {
+  assert.ok(sourcePath, 'Use the reviewed API core path');
+  const directory = mkdtempSync(join(tmpdir(), 'vcp-api-parity-'));
+  try {
+    // The pinned portable core is a single module. Use the same compiler CLI as the SDK build.
+    copyFileSync(sourcePath, join(directory, 'core.mts'));
+    const compiler = fileURLToPath(new URL('../node_modules/typescript/bin/tsc', import.meta.url));
+    execFileSync(process.execPath, [compiler, '--target', 'ES2022', '--module', 'NodeNext', 'core.mts'], {
+      cwd: directory,
+      stdio: 'inherit',
+    });
+    return await import(pathToFileURL(join(directory, 'core.mjs')).href);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+
+const { createEvidenceDemo } = await loadApiCore(process.env.VCP_EVIDENCE_API_CORE);
 const bundle = JSON.parse(readFileSync(new URL('../../examples/explorer-demo/bundle.json', import.meta.url), 'utf8'));
 const trust = JSON.parse(readFileSync(new URL('../../examples/explorer-demo/trust.json', import.meta.url), 'utf8'));
 function compare(bundle, trust) {
