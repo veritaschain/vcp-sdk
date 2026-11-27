@@ -105,7 +105,7 @@ the full batch remains INDETERMINATE because no external anchor proof is supplie
 ## Install
 
 The commands below pin the reviewed development snapshot
-[`7e9e9e69593c844d63ef058f43d01dcbc643e569`](https://github.com/veritaschain/vcp-sdk/commit/7e9e9e69593c844d63ef058f43d01dcbc643e569).
+[`28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff`](https://github.com/veritaschain/vcp-sdk/commit/28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff).
 It includes the replay-input, Merkle-proof input and installer-integrity fixes,
 plus the `vcp seal` path checks from [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18).
 It also checks the batch policy and stages both output files before replacement.
@@ -120,7 +120,7 @@ development snapshot below for current evaluation.
 Python 3.10+ and Git (`--force-reinstall` also replaces an existing `0.1.0` install):
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@7e9e9e69593c844d63ef058f43d01dcbc643e569#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff#subdirectory=python"
 ```
 
 TypeScript (Node 20+, or a browser bundler):
@@ -128,7 +128,7 @@ TypeScript (Node 20+, or a browser bundler):
 ```bash
 git clone https://github.com/veritaschain/vcp-sdk.git
 cd vcp-sdk
-git checkout --detach 7e9e9e69593c844d63ef058f43d01dcbc643e569
+git checkout --detach 28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff
 cd typescript
 npm ci
 npm run build
@@ -186,7 +186,7 @@ link to it.
 The two `seal` outputs must be distinct from each other, the event input, and
 the private-key file. A collision (including a relative-path, symbolic-link,
 or existing hard-link alias) exits with 3 before either output is written.
-Every event must have the same Header.PolicyID. An explicit `--policy-id` must
+The CLI checks the complete input for a single Header.PolicyID before signing any event. An explicit `--policy-id` must
 match that value. Split inputs by policy before sealing.
 
 Sealing stages both files in their destination directories. If replacing the
@@ -196,7 +196,8 @@ Each file is replaced individually: consumers should read the pair after a
 successful exit. After a crash or a reported rollback failure, stop writers,
 inspect the remaining `.vcp-seal-*` directories (including any `previous`
 backup), restore or verify the pair, then remove those staging directories
-before retrying. Protect the output directories from other writers.
+before retrying. A cleanup warning after a successful seal identifies a staging
+directory to remove after checking the output. Protect the directories from other writers.
 
 ## Quick start (TypeScript)
 

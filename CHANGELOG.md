@@ -5,7 +5,7 @@
 These entries describe development after the unchanged `v0.1.0` prerelease tag
 (`cc6c4689c312662dcd9157f3270e6ed8f2c509cb`). Package metadata still says
 `0.1.0`; use a full source commit to identify an installation. The README's
-fixed install snapshot is `7e9e9e69593c844d63ef058f43d01dcbc643e569`,
+fixed install snapshot is `28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff`,
 which includes the `vcp seal` path checks from [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18)
 and the batch policy and output-pair corrections below.
 

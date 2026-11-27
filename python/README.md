@@ -18,7 +18,7 @@ See the [repository installation guide](https://github.com/veritaschain/vcp-sdk#
 for the snapshot's scope and other languages.
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@7e9e9e69593c844d63ef058f43d01dcbc643e569#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff#subdirectory=python"
 ```
 
 Modules: `jcs` (canonical JSON), `hashing` (EventHash), `merkle`, `signing`,
