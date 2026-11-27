@@ -51,10 +51,40 @@ class SealPublicationTests(unittest.TestCase):
     def test_explicit_matching_policy(self):
         self.assertEqual(self.seal("--policy-id", "A")[0], 0)
         events = [json.loads(self.events.read_text())]
+        self.assertNotIn("PolicyIdentification", events[0])
         record = json.loads(self.anchor.read_text())
         self.assertEqual(record["PolicyID"], "A")
         checked = vcp.verify_batch(events, record, self.key.verify_key)
         self.assertEqual([item.reason for item in checked.failed()], ["MISSING_ANCHOR_PROOF"])
+
+    def test_seal_preserves_unsigned_policy_identification(self):
+        event, = json.loads(self.source.read_text())
+        del event["Security"]["Signature"]
+        policy = {"PolicyID": "A", "ConformanceTier": "SILVER",
+                  "RegistrationPolicy": {"Issuer": "取引所", "PolicyURI": "urn:example:policy:a"}}
+        event["PolicyIdentification"] = policy
+        self.source.write_text(json.dumps(event) + "\n")  # unsigned JSON Lines input
+        self.assertEqual(self.seal()[0], 0)
+        sealed = json.loads(self.events.read_text())
+        self.assertEqual(sealed["PolicyIdentification"], policy)
+        self.assertEqual(sealed["Security"]["EventHash"], event["Security"]["EventHash"])
+        report = vcp.verify_event(sealed, self.key.verify_key)
+        self.assertEqual(report.status, "VALID")
+        self.assertTrue(any("PolicyIdentification is outside EventHash" in note for note in report.notes))
+
+    def test_inconsistent_policy_identification_refuses_whole_batch_before_signing(self):
+        self.write_input("A", "A")
+        events = json.loads(self.source.read_text())
+        for policy in (None, [], {}, {"PolicyID": "B", "ConformanceTier": "SILVER"}):
+            with self.subTest(policy=policy):
+                events[1]["PolicyIdentification"] = policy
+                self.source.write_text(json.dumps(events))
+                with patch.object(cli, "seal_event", wraps=cli.seal_event) as sign:
+                    code, stdout, stderr = self.seal()
+                sign.assert_not_called()
+                self.assertEqual((code, stdout), (3, ""))
+                self.assertIn("line 2: PolicyIdentification", stderr)
+                self.assert_originals()
 
     def test_conflicting_explicit_policy_preserves_pair(self):
         code, stdout, stderr = self.seal("--policy-id", "B")
