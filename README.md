@@ -105,12 +105,12 @@ the full batch remains INDETERMINATE because no external anchor proof is supplie
 ## Install
 
 The commands below pin the reviewed development snapshot
-[`28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff`](https://github.com/veritaschain/vcp-sdk/commit/28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff).
+[`59860c5d3180ac8bdc2e8b9df500af7ae2c162f7`](https://github.com/veritaschain/vcp-sdk/commit/59860c5d3180ac8bdc2e8b9df500af7ae2c162f7).
 It includes the replay-input, Merkle-proof input and installer-integrity fixes,
 plus the `vcp seal` path checks from [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18).
 It also checks the batch policy and stages both output files before replacement.
-The preceding snapshot (`0832f1d8`) lacks these last two fixes;
-reinstall from the commit above before using `vcp seal`. Package metadata still reports `0.1.0`; identify this snapshot by its
+It preserves optional `PolicyIdentification` metadata that the previous snapshot
+(`28d46e84`) dropped during sealing. Package metadata still reports `0.1.0`; identify this snapshot by its
 commit SHA. This is not a new tagged release.
 
 The historical [`v0.1.0` tag](https://github.com/veritaschain/vcp-sdk/tree/v0.1.0)
@@ -120,7 +120,7 @@ development snapshot below for current evaluation.
 Python 3.10+ and Git (`--force-reinstall` also replaces an existing `0.1.0` install):
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@59860c5d3180ac8bdc2e8b9df500af7ae2c162f7#subdirectory=python"
 ```
 
 TypeScript (Node 20+, or a browser bundler):
@@ -128,7 +128,7 @@ TypeScript (Node 20+, or a browser bundler):
 ```bash
 git clone https://github.com/veritaschain/vcp-sdk.git
 cd vcp-sdk
-git checkout --detach 28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff
+git checkout --detach 59860c5d3180ac8bdc2e8b9df500af7ae2c162f7
 cd typescript
 npm ci
 npm run build
@@ -188,6 +188,10 @@ the private-key file. A collision (including a relative-path, symbolic-link,
 or existing hard-link alias) exits with 3 before either output is written.
 The CLI checks the complete input for a single Header.PolicyID before signing any event. An explicit `--policy-id` must
 match that value. Split inputs by policy before sealing.
+If an event includes a top-level `PolicyIdentification` object, its `PolicyID`
+must match `Header.PolicyID`. The CLI copies the complete object to the sealed
+event. The event signature covers the hash of the Header, Payload and optional
+previous hash. The policy block's conformance tier and registration details remain unsigned metadata.
 
 Sealing stages both files in their destination directories. If replacing the
 anchor fails, the CLI restores the previous events file or removes the newly
