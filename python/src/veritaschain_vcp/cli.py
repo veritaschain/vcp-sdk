@@ -164,6 +164,10 @@ def cmd_seal(args: argparse.Namespace) -> int:
             print(f"line {n}: {problem}; refusing to sign", file=sys.stderr)
             return 3
         event_policy = ev["Header"]["PolicyID"]
+        if "PolicyIdentification" in ev:
+            identification = ev["PolicyIdentification"]
+            if not isinstance(identification, dict) or identification.get("PolicyID") != event_policy:
+                raise UsageError(f"line {n}: PolicyIdentification must be an object with a PolicyID matching Header.PolicyID")
         if policy is None:
             policy = event_policy
         elif event_policy != policy:
@@ -191,6 +195,9 @@ def cmd_seal(args: argparse.Namespace) -> int:
         if "EventHash" in given and parse_hash(given["EventHash"]) != parse_hash(e["Security"]["EventHash"]):
             print(f"line {n}: the EventHash written by the producer differs from the recomputed one; refusing to sign", file=sys.stderr)
             return 3
+        if "PolicyIdentification" in ev:
+            # Section 6.1.1 signs Header and Payload; carry the policy metadata alongside them.
+            e["PolicyIdentification"] = ev["PolicyIdentification"]
         sealed.append(e)
         prev = e["Security"]["EventHash"]
     batch = build_batch(sealed, anchor_reference=args.anchor_reference)

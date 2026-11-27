@@ -86,11 +86,11 @@ SDK が実行しない検査を VALID と報告することはありません。
 ## インストール
 
 以下の手順は、レビュー済みの開発版ソース
-[`28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff`](https://github.com/veritaschain/vcp-sdk/commit/28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff)
+[`59860c5d3180ac8bdc2e8b9df500af7ae2c162f7`](https://github.com/veritaschain/vcp-sdk/commit/59860c5d3180ac8bdc2e8b9df500af7ae2c162f7)
 を固定して取得します。リプレイ入力・Merkle 証明の入力・インストーラーの完全性検証の修正に加え、
 [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18) の `vcp seal` のパス衝突チェックを含みます。
 今回の版では全イベントのポリシーを照合し、両方の出力を準備してから既存ファイルを置き換えます。
-前回の導入版 `0832f1d8` を使用中の場合は、上記コミットから再インストールしてください。
+前回の導入版 `28d46e84` が署名時に取り除いていた任意の `PolicyIdentification` ブロックも保持します。
 パッケージのバージョン表示は `0.1.0` のままなので、
 このソースはコミット SHA で識別してください。新しいタグ付きリリースではありません。
 
@@ -100,7 +100,7 @@ SDK が実行しない検査を VALID と報告することはありません。
 Python 3.10 以上と Git（`--force-reinstall` により、導入済みの `0.1.0` も置き換えます）:
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@59860c5d3180ac8bdc2e8b9df500af7ae2c162f7#subdirectory=python"
 ```
 
 TypeScript(Node 20 以上、またはブラウザ向けバンドラ):
@@ -108,7 +108,7 @@ TypeScript(Node 20 以上、またはブラウザ向けバンドラ):
 ```bash
 git clone https://github.com/veritaschain/vcp-sdk.git
 cd vcp-sdk
-git checkout --detach 28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff
+git checkout --detach 59860c5d3180ac8bdc2e8b9df500af7ae2c162f7
 cd typescript
 npm ci
 npm run build
@@ -148,6 +148,9 @@ vcp seal unsigned.jsonl --private-key-file ea.key --out events.jsonl --anchor-ou
 同じファイルを指す指定（相対パス、シンボリックリンク、既存のハードリンクを含む）は、
 どちらにも書き込む前に終了コード3で拒否します。別ファイルとして指定した既存の出力先は上書きされます。
 最初の署名の前に、全イベントの `Header.PolicyID` が一致することを確認します。`--policy-id` を指定する場合も同じ値を渡してください。
+トップレベルに任意の `PolicyIdentification` がある場合は、その `PolicyID` も `Header.PolicyID` と照合し、
+ブロック全体を出力に引き継ぎます。イベント署名は Header、Payload および任意の直前ハッシュから計算したハッシュを対象とします。
+ブロック内の適合ティアや登録情報は署名対象外です。
 
 両方のファイルを各出力先のディレクトリで準備します。アンカーの置換に失敗するとイベント出力を元に戻します。
 同じ出力先を使う別の seal は終了コード3で停止します。各ファイルを順に置き換えるため、利用側は成功終了後に両方を読んでください。
