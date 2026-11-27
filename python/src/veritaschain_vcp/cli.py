@@ -26,6 +26,7 @@ from pathlib import Path
 from typing import Any
 
 from . import __version__
+from ._seal_output import publish_seal_outputs
 from .hashing import compute_event_hash, format_event_hash, parse_hash
 from .jsonio import StrictJSONError, load_jsonl, loads
 from .producer import anchor_record, build_batch, seal_event
@@ -150,6 +151,7 @@ def cmd_seal(args: argparse.Namespace) -> int:
     if not unsigned:
         raise UsageError("no events in the input")
     sealed = []
+    policy = args.policy_id
     prev: str | None = None
     if args.prior_hash is not None:
         try:
@@ -161,6 +163,14 @@ def cmd_seal(args: argparse.Namespace) -> int:
         if problem:
             print(f"line {n}: {problem}; refusing to sign", file=sys.stderr)
             return 3
+        event_policy = ev["Header"]["PolicyID"]
+        if policy is None:
+            policy = event_policy
+        elif event_policy != policy:
+            raise UsageError(f"line {n}: Header.PolicyID differs from the batch policy; group events by PolicyID")
+
+    # Validate policy across the complete batch before invoking the signing key.
+    for n, ev in enumerate(unsigned, 1):
         given = ev.get("Security", {}) if isinstance(ev.get("Security"), dict) else {}
         if "EventHash" not in given and not args.allow_missing_hash:
             print(f"line {n}: no producer-written Security.EventHash (use --allow-missing-hash to sign anyway)", file=sys.stderr)
@@ -184,11 +194,11 @@ def cmd_seal(args: argparse.Namespace) -> int:
         sealed.append(e)
         prev = e["Security"]["EventHash"]
     batch = build_batch(sealed, anchor_reference=args.anchor_reference)
-    policy = args.policy_id or sealed[0]["Header"]["PolicyID"]
     record = anchor_record(batch, key, policy)
-    out = Path(args.out)
-    out.write_text("".join(json.dumps(e, ensure_ascii=False, separators=(",", ":")) + "\n" for e in batch.events), encoding="utf-8")
-    Path(args.anchor_out).write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    event_text = "".join(json.dumps(event, ensure_ascii=False, separators=(",", ":")) + "\n"
+                         for event in batch.events)
+    anchor_text = json.dumps(record, indent=2, ensure_ascii=False) + "\n"
+    publish_seal_outputs(Path(args.out), event_text, Path(args.anchor_out), anchor_text)
     last = batch.events[-1]
     print(json.dumps({"events": len(batch.events), "merkle_root": batch.merkle_root,
                       "last_sequence": last["Header"]["SequenceNum"],
@@ -244,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
                    help="sign lines that carry no producer-written EventHash")
     p.add_argument("--out", required=True, help="sealed events file, distinct from the input, key and anchor output")
     p.add_argument("--anchor-out", required=True, help="anchor file, distinct from the input, key and events output")
-    p.add_argument("--policy-id")
+    p.add_argument("--policy-id", help="expected Header.PolicyID for every event (defaults to the first event policy)")
     p.add_argument("--anchor-reference")
     p.add_argument("--prev-hash", action="store_true", help="link events with PrevHash")
     p.add_argument("--prior-hash", help="EventHash of the event before line 1 (the previous file's last_event_hash); "

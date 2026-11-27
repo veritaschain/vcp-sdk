@@ -5,9 +5,13 @@
 These entries describe development after the unchanged `v0.1.0` prerelease tag
 (`cc6c4689c312662dcd9157f3270e6ed8f2c509cb`). Package metadata still says
 `0.1.0`; use a full source commit to identify an installation. The README's
-fixed install snapshot is `0832f1d84af9b130db6a17d36c343a8abd7002a8`,
-which includes the `vcp seal` path checks from [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18).
-The previously recommended snapshot (`8eadded87`) did not include those checks.
+fixed install snapshot is `28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff`,
+which includes the `vcp seal` path checks from [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18)
+and the batch policy and output-pair corrections below.
+
+* Sealing checks the policy across the complete input before publishing, stages
+  both output files, and rolls back the first replacement if the second fails.
+  The previous installation snapshot (`0832f1d8`) predates these fixes.
 
 * Merkle proof-generation input correction ([PR #10](https://github.com/veritaschain/vcp-sdk/pull/10)):
   Python rejects non-integer leaf positions and first-tree sizes, including

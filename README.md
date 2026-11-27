@@ -105,10 +105,11 @@ the full batch remains INDETERMINATE because no external anchor proof is supplie
 ## Install
 
 The commands below pin the reviewed development snapshot
-[`0832f1d84af9b130db6a17d36c343a8abd7002a8`](https://github.com/veritaschain/vcp-sdk/commit/0832f1d84af9b130db6a17d36c343a8abd7002a8).
+[`28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff`](https://github.com/veritaschain/vcp-sdk/commit/28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff).
 It includes the replay-input, Merkle-proof input and installer-integrity fixes,
 plus the `vcp seal` path checks from [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18).
-The earlier installation snapshot (`8eadded87`) lacks these path checks;
+It also checks the batch policy and stages both output files before replacement.
+The preceding snapshot (`0832f1d8`) lacks these last two fixes;
 reinstall from the commit above before using `vcp seal`. Package metadata still reports `0.1.0`; identify this snapshot by its
 commit SHA. This is not a new tagged release.
 
@@ -119,7 +120,7 @@ development snapshot below for current evaluation.
 Python 3.10+ and Git (`--force-reinstall` also replaces an existing `0.1.0` install):
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@0832f1d84af9b130db6a17d36c343a8abd7002a8#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff#subdirectory=python"
 ```
 
 TypeScript (Node 20+, or a browser bundler):
@@ -127,7 +128,7 @@ TypeScript (Node 20+, or a browser bundler):
 ```bash
 git clone https://github.com/veritaschain/vcp-sdk.git
 cd vcp-sdk
-git checkout --detach 0832f1d84af9b130db6a17d36c343a8abd7002a8
+git checkout --detach 28d46e8491f6ff819f1cfe7c31895ed7ad7df3ff
 cd typescript
 npm ci
 npm run build
@@ -185,9 +186,18 @@ link to it.
 The two `seal` outputs must be distinct from each other, the event input, and
 the private-key file. A collision (including a relative-path, symbolic-link,
 or existing hard-link alias) exits with 3 before either output is written.
-Existing distinct output files are still replaced. This path check detects
-ordinary file-selection mistakes; protect the working directory from
-concurrent file or link changes.
+The CLI checks the complete input for a single Header.PolicyID before signing any event. An explicit `--policy-id` must
+match that value. Split inputs by policy before sealing.
+
+Sealing stages both files in their destination directories. If replacing the
+anchor fails, the CLI restores the previous events file or removes the newly
+created one. A competing seal sharing either destination exits with code 3.
+Each file is replaced individually: consumers should read the pair after a
+successful exit. After a crash or a reported rollback failure, stop writers,
+inspect the remaining `.vcp-seal-*` directories (including any `previous`
+backup), restore or verify the pair, then remove those staging directories
+before retrying. A cleanup warning after a successful seal identifies a staging
+directory to remove after checking the output. Protect the directories from other writers.
 
 ## Quick start (TypeScript)
 
