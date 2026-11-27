@@ -128,14 +128,16 @@ for Silver.
 Seal each closed file (not today's, which the EA is still writing):
 
 Use the same [reviewed development snapshot](../README.md#install) for the Python
-sealing CLI. This snapshot rejects output paths that alias the input, key file or other output.
+sealing CLI. This snapshot also checks that each event has the batch PolicyID
+and stages both output files before replacing them. It rejects output paths
+that alias the input, key file or other output.
 The historical `v0.1.0` tag lacks this check; package metadata still
 reports `0.1.0`, so reinstall when replacing that version. This source pin does
 not configure the separately reviewed `MT5_SETUP_SHA256` required by the
 [MQL5 installer gate](../tools/mql5/INSTALLER_REVIEW.md).
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@0832f1d84af9b130db6a17d36c343a8abd7002a8#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@7e9e9e69593c844d63ef058f43d01dcbc643e569#subdirectory=python"
 vcp keygen --out /secure/path/ea.key          # once; prints the public key
 F="<MT5 data folder>/MQL5/Files/vcp-mt5-example-ea-12345-70010"   # account 12345, magic 70010
 vcp seal "$F-20261024.jsonl" --private-key-file /secure/path/ea.key \

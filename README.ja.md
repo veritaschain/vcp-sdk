@@ -86,10 +86,11 @@ SDK が実行しない検査を VALID と報告することはありません。
 ## インストール
 
 以下の手順は、レビュー済みの開発版ソース
-[`0832f1d84af9b130db6a17d36c343a8abd7002a8`](https://github.com/veritaschain/vcp-sdk/commit/0832f1d84af9b130db6a17d36c343a8abd7002a8)
+[`7e9e9e69593c844d63ef058f43d01dcbc643e569`](https://github.com/veritaschain/vcp-sdk/commit/7e9e9e69593c844d63ef058f43d01dcbc643e569)
 を固定して取得します。リプレイ入力・Merkle 証明の入力・インストーラーの完全性検証の修正に加え、
 [PR #18](https://github.com/veritaschain/vcp-sdk/pull/18) の `vcp seal` のパス衝突チェックを含みます。
-以前の導入版 `8eadded87` にはこのチェックがないため、`vcp seal` を使う前に上記のコミットから再インストールしてください。
+今回の版では全イベントのポリシーを照合し、両方の出力を準備してから既存ファイルを置き換えます。
+前回の導入版 `0832f1d8` を使用中の場合は、上記コミットから再インストールしてください。
 パッケージのバージョン表示は `0.1.0` のままなので、
 このソースはコミット SHA で識別してください。新しいタグ付きリリースではありません。
 
@@ -99,7 +100,7 @@ SDK が実行しない検査を VALID と報告することはありません。
 Python 3.10 以上と Git（`--force-reinstall` により、導入済みの `0.1.0` も置き換えます）:
 
 ```bash
-python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@0832f1d84af9b130db6a17d36c343a8abd7002a8#subdirectory=python"
+python -m pip install --force-reinstall "git+https://github.com/veritaschain/vcp-sdk.git@7e9e9e69593c844d63ef058f43d01dcbc643e569#subdirectory=python"
 ```
 
 TypeScript(Node 20 以上、またはブラウザ向けバンドラ):
@@ -107,7 +108,7 @@ TypeScript(Node 20 以上、またはブラウザ向けバンドラ):
 ```bash
 git clone https://github.com/veritaschain/vcp-sdk.git
 cd vcp-sdk
-git checkout --detach 0832f1d84af9b130db6a17d36c343a8abd7002a8
+git checkout --detach 7e9e9e69593c844d63ef058f43d01dcbc643e569
 cd typescript
 npm ci
 npm run build
@@ -146,7 +147,12 @@ vcp seal unsigned.jsonl --private-key-file ea.key --out events.jsonl --anchor-ou
 2つの出力先は互いに別のファイルを指定し、入力証跡や秘密鍵のファイルも出力先にしないでください。
 同じファイルを指す指定（相対パス、シンボリックリンク、既存のハードリンクを含む）は、
 どちらにも書き込む前に終了コード3で拒否します。別ファイルとして指定した既存の出力先は上書きされます。
-同時実行によるパス変更は防げないため、作業ディレクトリを保護してください。
+すべてのイベントで `Header.PolicyID` をそろえ、`--policy-id` を指定する場合も同じ値を渡してください。
+
+両方のファイルを各出力先のディレクトリで準備します。アンカーの置換に失敗するとイベント出力を元に戻します。
+同じ出力先を使う別の seal は終了コード3で停止します。各ファイルを順に置き換えるため、利用側は成功終了後に両方を読んでください。
+異常停止や復元失敗の後は書き込みを止め、残った `.vcp-seal-*` とその中の `previous` バックアップを確認してください。
+ペアを復元または検証した後、一時ディレクトリを取り除いて再実行します。
 
 TypeScript では、イベントの JSON を `JSON.parse` ではなく `parseJson`・`parseJsonLines` で読んでください。
 `JSON.parse` はナノ秒のタイムスタンプを丸めます。書き出しには `toJson` を使います。
