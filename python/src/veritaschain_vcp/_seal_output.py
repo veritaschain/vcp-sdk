@@ -6,6 +6,7 @@ import hashlib
 import os
 import shutil
 import stat
+import sys
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Iterator
@@ -49,7 +50,13 @@ def _stage(target: Path, content: str) -> Iterator[Path]:
         raise
     finally:
         if not keep_for_recovery:
-            shutil.rmtree(folder)
+            try:
+                shutil.rmtree(folder)
+            except OSError as error:
+                # Cleanup must not turn a successful publication into a reported
+                # failure (or mask the original error on an unsuccessful one).
+                print(f"warning: could not remove seal staging directory {folder}: {error}",
+                      file=sys.stderr)
 
 
 def publish_seal_outputs(events: Path, event_text: str, anchor: Path, anchor_text: str) -> None:

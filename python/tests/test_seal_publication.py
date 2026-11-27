@@ -64,7 +64,9 @@ class SealPublicationTests(unittest.TestCase):
 
     def test_mixed_input_policies_preserve_pair(self):
         self.write_input("A", "B")
-        code, stdout, stderr = self.seal()
+        with patch.object(cli, "seal_event", wraps=cli.seal_event) as sign:
+            code, stdout, stderr = self.seal()
+        sign.assert_not_called()
         self.assertEqual((code, stdout), (3, ""))
         self.assertIn("line 2: Header.PolicyID", stderr)
         self.assert_originals()
@@ -141,3 +143,15 @@ class SealPublicationTests(unittest.TestCase):
         self.assertEqual(self.seal()[0], 0)
         self.assertTrue(link.is_symlink())
         self.assertEqual(json.loads(real_events.read_text())["Header"]["PolicyID"], "A")
+
+    def test_cleanup_error_after_commit_reports_success_and_recoverable_warning(self):
+        with patch("veritaschain_vcp._seal_output.shutil.rmtree", side_effect=OSError("busy directory")):
+            code, stdout, stderr = self.seal()
+        self.assertEqual(code, 0)
+        self.assertEqual(json.loads(stdout)["events"], 1)
+        self.assertIn("warning: could not remove seal staging directory", stderr)
+        events = [json.loads(self.events.read_text())]
+        record = json.loads(self.anchor.read_text())
+        self.assertEqual(record["PolicyID"], "A")
+        self.assertEqual(vcp.verify_batch(events, record, self.key.verify_key).status, "INDETERMINATE")
+        self.assertEqual(len(list(self.folder.glob(".vcp-seal-*"))), 2)

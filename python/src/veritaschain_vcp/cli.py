@@ -168,6 +168,9 @@ def cmd_seal(args: argparse.Namespace) -> int:
             policy = event_policy
         elif event_policy != policy:
             raise UsageError(f"line {n}: Header.PolicyID differs from the batch policy; group events by PolicyID")
+
+    # Validate policy across the complete batch before invoking the signing key.
+    for n, ev in enumerate(unsigned, 1):
         given = ev.get("Security", {}) if isinstance(ev.get("Security"), dict) else {}
         if "EventHash" not in given and not args.allow_missing_hash:
             print(f"line {n}: no producer-written Security.EventHash (use --allow-missing-hash to sign anyway)", file=sys.stderr)
